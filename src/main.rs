@@ -1,19 +1,19 @@
 #[macro_use]
-// extern crate rocket;
+extern crate rocket;
 use rocket::serde::{json::Json};
 use std::collections::HashMap;
 use std::net::SocketAddr;
 use std::process;
 use std::process::Stdio;
-// mod entities;
-// mod manage_sessions;
+mod entities;
+mod manage_sessions;
 use manage_sessions::*;
-// mod manage_users;
+mod manage_users;
 use manage_users::*;
-// mod manage_cookies;
-// mod fairings;
-// mod manage_contact;
-// mod emailer;
+mod manage_cookies;
+mod fairings;
+mod manage_contact;
+mod emailer;
 use emailer::*;
 
 use manage_contact::*;
@@ -44,7 +44,6 @@ use log4rs::append::file::FileAppender;
 use log4rs::encode::pattern::PatternEncoder;
 use log4rs::config::{Appender, Logger, Root};
 use crate::emailer::emailer::send_email;
-// use rocket::tokio::net::unix::SocketAddr;
 
 
 // // // // // // // // // // // // // // // // // // // // // // // //
@@ -66,7 +65,7 @@ async fn index(
 }
 
 
-// curl -XGET -H 'x-api-key:SomePurpleHAiredB1tchatemycereal' https://koonts.net/api/<session_id>
+// curl -XGET -H 'x-api-key:YOURAPIKEY' https://.net/api/<session_id>
 #[get("/api/<session_id>")]
 async fn get_user(
     socket_addr: SocketAddr,
@@ -81,7 +80,7 @@ async fn get_user(
 // // // //
 
 
-// curl -XPOST -H 'Content-Type:application/json' -H 'x-api-key:SomePurpleHAiredB1tchatemycereal' http://127.0.0.1:8000/adduser -d '{"username": "test","password": "test","email": "test","first_name": "test","last_name": "test"}'
+// curl -XPOST -H 'Content-Type:application/json' -H 'x-api-key:YOURAPIKEY' http://127.0.0.1:8000/adduser -d '{"username": "test","password": "test","email": "test","first_name": "test","last_name": "test"}'
 #[post("/api/adduser", data = "<data>")]
 async fn adduser(
     socket_addr: SocketAddr,
@@ -95,7 +94,7 @@ async fn adduser(
 }
 
 
-// curl -XPOST -H 'Content-Type:application/json' http://127.0.0.1:8000/login -d '{"username": "foxx","password": "doxx"}'
+// curl -XPOST -H 'Content-Type:application/json' http://127.0.0.1:8000/login -d '{"username": "user","password": "password"}'
 #[post("/api/login", data = "<data>")]
 async fn login(
     pool: &rocket::State<MySqlPool>,
@@ -111,7 +110,7 @@ async fn login(
 }
 
 
-// curl -XGET https://koonts.net/api/logout/session_id/
+// curl -XGET https://.net/api/logout/session_id/
 #[get("/api/logout/<session_id>")]
 async fn logout(
     socket_addr: SocketAddr,
@@ -130,7 +129,7 @@ async fn logout(
 }
 
 
-// // curl -XGET -H 'x-api-key:SomePurpleHAiredB1tchatemycereal' http://127.0.0.1:8000/verify/foxx/sessionid
+// // curl -XGET -H 'x-api-key:YOURAPIKEY' http://127.0.0.1:8000/verify/user/sessionid
 // #[get("/api/verify")]
 // async fn verify(session: SessionKey<'_>, pool: &rocket::State<MySqlPool>) -> Result<(), Status> {
 //     // let key: String = FromSessionKey::stringify(session);
@@ -160,7 +159,7 @@ async fn verify_by_session(
 }
 
 
-// curl -XPOST -H 'Content-Type:application/json' -H 'x-api-key:SomePurpleHAiredB1tchatemycereal' http://127.0.0.1:8030/api/addcontact -d '{"first_name": "test","last_name": "test","email": "test","phone": "test","message": "test","additional_details": "test"}'
+// curl -XPOST -H 'Content-Type:application/json' -H 'x-api-key:YOURAPIKEY' http://127.0.0.1:8030/api/addcontact -d '{"first_name": "test","last_name": "test","email": "test","phone": "test","message": "test","additional_details": "test"}'
 #[post("/api/addcontact", data = "<data>")]
 async fn addcontact(
     socket_addr: SocketAddr,
@@ -169,37 +168,17 @@ async fn addcontact(
     _key: ApiKey<'_>,
 ) -> Result<(), ErrorResponder> {
     let mail_data = data.clone();
-    info!(target:"app::requests", "ADD CONTACT - KOONTS - From: {}", socket_addr.ip().to_string());
+    info!(target:"app::requests", "ADD CONTACT - From: {}", socket_addr.ip().to_string());
     add_new_contact(data, pool).await;
     let message = format!("Message from: {} {} \n
     Email: {} \n
     Message: {} \n
     Details: {} \n
     ", mail_data.first_name.as_str(), mail_data.last_name.as_str(), mail_data.email.as_str(), mail_data.message.as_str(), mail_data.additional_details);
-    send_email("james@koonts.net", "noreply@koonts.net", "Contact Form Message", message.as_str());
+    send_email("you@email.net", "noreply@.net", "Contact Form Message", message.as_str());
     Ok(())
 }
 
-
-// curl -XPOST -H 'Content-Type:application/json' -H 'x-api-key:SomePurpleHAiredB1tchatemycereal' http://127.0.0.1:8030/api/addcontact -d '{"first_name": "test","last_name": "test","email": "test","phone": "test","message": "test","additional_details": "test"}'
-#[post("/api/addcontact/mackenzie", data = "<data>")]
-async fn addcontact_mackenzie(
-    socket_addr: SocketAddr,
-    pool: &rocket::State<MySqlPool>,
-    data: Json<Contact>,
-    _key: ApiKey<'_>,
-) -> Result<(), ErrorResponder> {
-    let mail_data = data.clone();
-    info!(target:"app::requests", "ADD CONTACT - KOONTS - From: {}", socket_addr.ip().to_string());
-    add_new_contact(data, pool).await;
-    let message = format!("Message from: {} {} \n
-    Email: {} \n
-    Message: {} \n
-    Details: {} \n
-    ", mail_data.first_name.as_str(), mail_data.last_name.as_str(), mail_data.email.as_str(), mail_data.message.as_str(), mail_data.additional_details);
-    send_email("mackenzie.bitz@gmail.com", "noreply@koonts.net", "Contact Form Message", message.as_str());
-    Ok(())
-}
 
 
 // #[get("/cookiecheck")]
@@ -304,7 +283,7 @@ pub async fn main() {
     println!("{}", database_url);
     // launch rocket
     tokio::spawn(async {
-        // let start = Instant::now();
+        let start = Instant::now();
         let mut interval = interval_at(start, tokio::time::Duration::from_secs(5));
 
         loop {
@@ -328,7 +307,6 @@ pub async fn main() {
                 index,
                 adduser,
                 addcontact,
-                addcontact_mackenzie,
                 login,
                 logout,
                 // verify,

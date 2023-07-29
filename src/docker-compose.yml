@@ -1,0 +1,32 @@
+services:
+  air-quality:
+    restart: always
+    build: .
+    ports:
+      - "8030:8030"
+
+
+#apache:
+#  image: php:7.4.11-apache
+#  restart: always
+#  container_name: apache
+#  ports:
+#    - '8081:80'
+#    - '443:8443'
+#  volumes:
+#    - ./docker/www:/var/www/html
+#    - ~/.ssh/id_rsa:/root/.ssh/id_rsa
+#  command:
+#    - bash
+#    - -c
+#    - >
+#      apt-get update;
+#      apt-get install git -y;
+#      ssh-keyscan -t rsa github.com > ~/.ssh/known_hosts;
+#      git clone git@github.com:user/project.git;
+#  environment:
+#    XDEBUG_CONFIG: "remote_enable=1 remote_host=192.168.15.21 remote_port=8081 remote_autostart=1"
+#  depends_on:
+#    - mysql
+#  links:
+#    - mysql
