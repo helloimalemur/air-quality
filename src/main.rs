@@ -170,7 +170,7 @@ pub async fn main() {
     // launch rocket
     tokio::spawn(async {
         let start = Instant::now();
-        let mut interval = interval_at(start, tokio::time::Duration::from_secs(5));
+        let mut interval = interval_at(start, tokio::time::Duration::from_secs(15));
 
         loop {
             interval.tick().await;
