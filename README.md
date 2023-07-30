@@ -16,3 +16,8 @@ port = 8080
     CREATE USER 'dev'@'%' IDENTIFIED BY 'password';
     GRANT ALL PRIVILEGES ON database.* TO 'dev'@'%';
     FLUSH PRIVILEGES;
+
+
+
+### resources
+    https://api-docs.iqair.com/
