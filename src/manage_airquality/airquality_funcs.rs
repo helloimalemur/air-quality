@@ -9,10 +9,11 @@ use crate::manage_sub::sub_funcs;
 pub async fn new_airquality(new_airquality: AirQuality, pool: &rocket::State<MySqlPool>) {
     let _insert = sqlx::query(
         "INSERT INTO readings (city, state, temp, pressure, humidity, wind_speed, current_pollution_aqius, main_pollutant)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
+        VALUES (?,?,?,?,?,?,?,?)")
         .bind(new_airquality.data.city)
         .bind(new_airquality.data.state)
         .bind(new_airquality.data.current.weather.tp)
+        .bind(new_airquality.data.current.weather.pr)
         .bind(new_airquality.data.current.weather.hu)
         .bind(new_airquality.data.current.weather.ws)
         .bind(new_airquality.data.current.pollution.aqius)
