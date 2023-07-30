@@ -64,3 +64,9 @@ pub async fn add_new_airquality(data: Json<AirQuality>, pool: &State<MySqlPool>)
 
     airquality_funcs::new_airquality(new_airquality, pool).await;
 }
+
+
+pub fn fetch_data() {
+    println!("fetching..")
+    //TODO
+}

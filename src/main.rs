@@ -174,7 +174,7 @@ pub async fn main() {
 
         loop {
             interval.tick().await;
-            // println!("tick")
+            manage_airquality::airquality_funcs::fetch_data();
         }
     });
 
