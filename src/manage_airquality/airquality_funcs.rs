@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use std::fmt::format;
 use rocket::serde::json::Json;
 use rocket::State;
+use serde_json::json;
 use sqlx::{MySqlPool};
 use crate::entities::airquality::*;
 use crate::entities::sub::Sub;
@@ -70,12 +71,12 @@ pub async fn add_new_airquality(data: Json<AirQuality>, pool: &State<MySqlPool>)
 
 pub async fn fetch_data_fire_alerts(map: HashMap<String, String>) {
     println!("fetching..");
-    //TODO
     let key = map.get("iqair_key").unwrap();
     let url = format!("http://api.airvisual.com/v2/nearest_city?key={}", key);
     let req = reqwest::get(url).await;
-    // println!("{:?}", map);
+    let json = json!(req.unwrap().text().await.unwrap());
 
+    println!("{}", json);
 
     // add_new_airquality()
 }
