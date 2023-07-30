@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::fmt::format;
 use rocket::serde::json::Json;
 use rocket::State;
-use serde_json::json;
+use serde_json::{json, Value};
 use sqlx::{MySqlPool};
 use crate::entities::airquality::*;
 use crate::entities::sub::Sub;
@@ -69,14 +69,22 @@ pub async fn add_new_airquality(data: Json<AirQuality>, pool: &State<MySqlPool>)
 }
 
 
-pub async fn fetch_data_fire_alerts(map: HashMap<String, String>) {
+pub async fn fetch_data_fire_alerts(settings_map: HashMap<String, String>) {
     println!("fetching..");
-    let key = map.get("iqair_key").unwrap();
+    let key = settings_map.get("iqair_key").unwrap();
     let url = format!("http://api.airvisual.com/v2/nearest_city?key={}", key);
-    let req = reqwest::get(url).await;
-    let json = json!(req.unwrap().text().await.unwrap());
+    let req = reqwest::get(url).await.unwrap().text().await.unwrap();
+    let json = serde_json::from_str::<Value>(&*req).unwrap();
+    println!("{}", json.get("status").unwrap().to_string());
 
-    println!("{}", json);
 
-    // add_new_airquality()
+    // let iqair_data: AirQuality = serde_json::from_value(json).unwrap();
+    // println!("{:?}", iqair_data.status);
+
+    fire_alerts(json);
+    // add_new_airquality(json, pool);
+}
+
+pub async fn fire_alerts(json: Value) {
+    todo!()
 }
