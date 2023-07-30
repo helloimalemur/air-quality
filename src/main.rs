@@ -78,8 +78,7 @@ async fn addaq(
 ) -> Result<(), ErrorResponder> {
     info!(target:"app::requests", "ADD AQ - From: {}", socket_addr.ip().to_string());
     if key.0.to_string() == settings_map.get("api_key").unwrap().to_string() {
-        // add_new_airquality(data, pool).await;
-        println!("key match")
+        add_new_airquality(data, pool).await;
     }
     Ok(())
 }
