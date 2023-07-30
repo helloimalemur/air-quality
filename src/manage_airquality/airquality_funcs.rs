@@ -53,7 +53,7 @@ pub async fn fetch_data_fire_alerts(settings_map: HashMap<String, String>) {
     // println!("{:?}", json);
 
 
-    fire_alerts(json);
+    fire_alerts(json).await;
     // add_new_airquality(json, pool);
 }
 
