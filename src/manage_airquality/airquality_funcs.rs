@@ -44,10 +44,10 @@ pub async fn fetch_data_fire_alerts(settings_map: HashMap<String, String>) {
     println!("{:?}", json);
 
 
-    // fire_alerts(json);
+    fire_alerts(json);
     // add_new_airquality(json, pool);
 }
 
-pub async fn fire_alerts(json: Value) {
+pub async fn fire_alerts(json: AirQuality) {
     todo!()
 }
