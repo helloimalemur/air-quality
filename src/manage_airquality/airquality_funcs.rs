@@ -68,7 +68,8 @@ pub async fn add_new_airquality(data: Json<AirQuality>, pool: &State<MySqlPool>)
 
 
 pub fn fetch_data(map: HashMap<String, String>) {
-    println!("fetching..")
+    println!("fetching..");
     //TODO
     // let req = reqwest::get()
+    println!("{:?}", map);
 }
