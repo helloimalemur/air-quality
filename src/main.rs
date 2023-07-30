@@ -6,18 +6,9 @@ use std::net::SocketAddr;
 use std::process;
 use std::process::Stdio;
 mod entities;
-
-
-
-
-
 mod manage_sub;
-
 mod manage_airquality;
 mod fairings;
-
-
-
 use manage_sub::*;
 use manage_sub::sub_funcs::add_new_sub;
 use sqlx::{MySqlPool, Row};
@@ -28,15 +19,9 @@ use rocket::http::{Cookie, Header, Status};
 use rocket::request::{Request};
 use rocket::{Response};
 use rocket::fairing::{Fairing, Info, Kind};
-
-
-
 use crate::fairings::apikey_fairing::ApiKey;
-
-
 use rocket::http::{CookieJar};
 use crate::entities::sub::Sub;
-
 use log::{error, info, warn};
 use log::{debug, LevelFilter};
 use log4rs::append::console::ConsoleAppender;
@@ -181,7 +166,7 @@ pub async fn main() {
     });
 
     let config = rocket::Config {
-        port: 8030,
+        port: settings_map.get("port").unwrap().parse().unwrap(),
         address: std::net::Ipv4Addr::new(0, 0, 0, 0).into(),
         ..rocket::Config::debug_default()
     };

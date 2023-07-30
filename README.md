@@ -7,4 +7,5 @@ Create ./config/Settings.toml
 database_url = "mysql://user:password@domain.com:3306/database"
 database_name = "database"
 api_key = "yourapikey"
+port = 8080
 ```
