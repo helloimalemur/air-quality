@@ -49,7 +49,8 @@ pub async fn fetch_data_fire_alerts(settings_map: HashMap<String, String>) {
         .body(req)
         .send().await;
 
-    println!("{:?}", json);
+    // debug
+    // println!("{:?}", json);
 
 
     fire_alerts(json);
