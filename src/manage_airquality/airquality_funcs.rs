@@ -19,7 +19,6 @@ use crate::manage_sub::sub_funcs;
 pub async fn add_new_airquality(data: Json<AirQuality>, pool: &State<MySqlPool>) {
     let json = data.clone();
     let new_airquality = AirQuality {
-        id: Default::default(),
         status: json.status.to_string(),
         data: Data {
             city: json.data.city.to_string(),

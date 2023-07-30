@@ -15,7 +15,6 @@ use serde::*;
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct AirQuality {
-    pub id: i32,
     pub status: String,
     pub data: Data,
 }

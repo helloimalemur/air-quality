@@ -66,7 +66,7 @@ async fn addsub(
     Ok(())
 }
 
-// curl -XPOST -H 'Content-Type:application/json' -H 'x-api-key:YOURAPIKEY' http://127.0.0.1:8030/api/addcontact -d '{"email": "test","discord": "test","additional_details": "test"}'
+// curl -XPOST -H 'Content-Type:application/json' -H 'x-api-key:YOURAPIKEY' http://127.0.0.1:8080/api/addaq -d ''
 #[post("/api/addaq", data = "<data>")]
 async fn addaq(
     socket_addr: SocketAddr,
