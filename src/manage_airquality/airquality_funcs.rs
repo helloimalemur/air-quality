@@ -71,7 +71,7 @@ pub fn fetch_data_fire_alerts(map: HashMap<String, String>) {
     println!("fetching..");
     //TODO
     // let req = reqwest::get()
-    println!("{:?}", map);
+    // println!("{:?}", map);
 
 
     // add_new_airquality()
