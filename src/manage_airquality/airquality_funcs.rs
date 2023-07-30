@@ -29,8 +29,6 @@ pub async fn new_airquality(new_airquality: AirQuality, pool: &rocket::State<MyS
 pub async fn add_new_airquality(data: Json<AirQuality>, pool: &State<MySqlPool>) {
     let json = data.clone().0;
 
-    println!("{new_airquality:?}");
-
     new_airquality(json, pool).await;
 }
 
