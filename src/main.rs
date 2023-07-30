@@ -186,6 +186,11 @@ pub async fn main() {
         }
     });
 
+    // let moved_settings_two = settings_map.clone();
+    // tokio::spawn(async move {
+    //     //TODO: start a node instance?
+    // });
+
     custom(&config)
         .manage::<MySqlPool>(pool)
         .manage::<HashMap<String, String>>(settings_map.clone())
