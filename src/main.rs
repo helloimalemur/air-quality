@@ -16,7 +16,7 @@ use config::Config;
 use rocket::tokio::time::{interval_at, Instant};
 use rocket::{custom, tokio};
 use rocket::http::{Cookie, Header, Status};
-use rocket::request::{Request};
+use rocket::request::{FromRequest, Request};
 use rocket::{Response};
 use rocket::fairing::{Fairing, Info, Kind};
 use crate::fairings::apikey_fairing::ApiKey;
@@ -29,6 +29,7 @@ use log4rs::Config as LogConfig;
 use log4rs::append::file::FileAppender;
 use log4rs::encode::pattern::PatternEncoder;
 use log4rs::config::{Appender, Logger, Root};
+use rocket::outcome::Outcome;
 use crate::entities::airquality::AirQuality;
 use crate::manage_airquality::airquality_funcs::add_new_airquality;
 
@@ -71,14 +72,48 @@ async fn addsub(
 async fn addaq(
     socket_addr: SocketAddr,
     pool: &rocket::State<MySqlPool>,
+    settings_map: &rocket::State<HashMap<String, String>>,
     data: Json<AirQuality>,
-    _key: ApiKey<'_>,
+    key: ApiKey<'_>,
 ) -> Result<(), ErrorResponder> {
     info!(target:"app::requests", "ADD AQ - From: {}", socket_addr.ip().to_string());
-    add_new_airquality(data, pool).await;
+    if key.0.to_string() == settings_map.get("api_key").unwrap().to_string() {
+        // add_new_airquality(data, pool).await;
+        println!("key match")
+    }
     Ok(())
 }
 
+
+
+// // // // // // // // // // // // // // // // // // // // // // // //
+// // // // // // // // // // // // // // // // // // // // // // // //
+
+// pub struct ApiKey<'r>(&'r str);
+//
+// #[derive(Debug)]
+// pub enum ApiKeyError {
+//     MissingError,
+//     InvalidError,
+// }
+//
+// #[rocket::async_trait]
+// impl<'r> FromRequest<'r> for ApiKey<'r> {
+//     type Error = ApiKeyError;
+//
+//     async fn from_request(req: &'r Request<'_>) -> Outcome<ApiKey<'r>, (Status, ApiKeyError), ()> {
+//         /// Returns true if `key` is a valid API key string.
+//         fn is_valid(key: &str) -> bool {
+//             key == "yourapikey"
+//         }
+//
+//         match req.headers().get_one("x-api-key") {
+//             None => Outcome::Failure((Status::BadRequest, ApiKeyError::MissingError)),
+//             Some(key) if is_valid(key) => Outcome::Success(ApiKey(key)),
+//             Some(_) => Outcome::Failure((Status::BadRequest, ApiKeyError::InvalidError)),
+//         }
+//     }
+// }
 
 
 // // // // // // // // // // // // // // // // // // // // // // // //
@@ -183,6 +218,7 @@ pub async fn main() {
 
     custom(&config)
         .manage::<MySqlPool>(pool)
+        .manage::<HashMap<String, String>>(settings_map)
         .mount(
             "/",
             routes![

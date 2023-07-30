@@ -1,9 +1,10 @@
+use rocket::form::validate::Len;
 use rocket::http::Status;
 use rocket::outcome::{Outcome};
 use rocket::request::{Request, FromRequest};
 
-
-pub struct ApiKey<'r>(&'r str);
+#[derive(PartialEq)]
+pub struct ApiKey<'r>(pub(crate) &'r str);
 
 #[derive(Debug)]
 pub enum ApiKeyError {
@@ -18,7 +19,7 @@ impl<'r> FromRequest<'r> for ApiKey<'r> {
     async fn from_request(req: &'r Request<'_>) -> Outcome<ApiKey<'r>, (Status, ApiKeyError), ()> {
         /// Returns true if `key` is a valid API key string.
         fn is_valid(key: &str) -> bool {
-            key == "yourapikey"
+            key.len() > 0
         }
 
         match req.headers().get_one("x-api-key") {
@@ -28,3 +29,11 @@ impl<'r> FromRequest<'r> for ApiKey<'r> {
         }
     }
 }
+
+
+
+// impl stringify for ApiKey<'_> {
+//     fn stringify(key: ApiKey) -> String {
+//         key.0.to_string()
+//     }
+// }
