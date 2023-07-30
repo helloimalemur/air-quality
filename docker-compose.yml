@@ -1,7 +1,7 @@
 services:
   air-quality:
     restart: always
-    build: .
+    build: src
     ports:
       - "8030:8030"
 

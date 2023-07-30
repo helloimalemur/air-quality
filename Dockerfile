@@ -5,7 +5,7 @@ RUN \
   mkdir ~/.ssh/ && \
   ssh-keyscan -t rsa github.com > ~/.ssh/known_hosts
 WORKDIR /air-quality
-COPY . .
+COPY src .
 RUN ls /air-quality
 RUN cd /air-quality
 RUN cargo build
