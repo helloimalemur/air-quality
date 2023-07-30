@@ -1,6 +1,10 @@
 # air-quality
 WORK IN PROGRESS
 
+#### todo
+    web interface
+    add/update sub/alert thresholds
+    cycle/alert on sub after data fetch
 
 Notifications and Web Interface to notify subscribers of questionable/hazardous air quality in their area, using data from https://www.iqair.com/
 
