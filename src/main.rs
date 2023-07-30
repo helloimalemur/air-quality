@@ -29,7 +29,8 @@ use log4rs::Config as LogConfig;
 use log4rs::append::file::FileAppender;
 use log4rs::encode::pattern::PatternEncoder;
 use log4rs::config::{Appender, Logger, Root};
-
+use crate::entities::airquality::AirQuality;
+use crate::manage_airquality::airquality_funcs::add_new_airquality;
 
 
 // // // // // // // // // // // // // // // // // // // // // // // //
@@ -53,21 +54,28 @@ async fn index(
 
 // curl -XPOST -H 'Content-Type:application/json' -H 'x-api-key:YOURAPIKEY' http://127.0.0.1:8030/api/addcontact -d '{"email": "test","discord": "test","additional_details": "test"}'
 #[post("/api/addsub", data = "<data>")]
-async fn addcontact(
+async fn addsub(
     socket_addr: SocketAddr,
     pool: &rocket::State<MySqlPool>,
     data: Json<Sub>,
     _key: ApiKey<'_>,
 ) -> Result<(), ErrorResponder> {
     // let mail_data = data.clone();
-    // info!(target:"app::requests", "ADD CONTACT - From: {}", socket_addr.ip().to_string());
-    // add_new_sub(data, pool).await;
-    // let message = format!("Message from: {} {} \n
-    // Email: {} \n
-    // Message: {} \n
-    // Details: {} \n
-    // ", mail_data.first_name.as_str(), mail_data.last_name.as_str(), mail_data.email.as_str(), mail_data.message.as_str(), mail_data.additional_details);
+    info!(target:"app::requests", "ADD SUB - From: {}", socket_addr.ip().to_string());
+    add_new_sub(data, pool).await;
+    Ok(())
+}
 
+// curl -XPOST -H 'Content-Type:application/json' -H 'x-api-key:YOURAPIKEY' http://127.0.0.1:8030/api/addcontact -d '{"email": "test","discord": "test","additional_details": "test"}'
+#[post("/api/addaq", data = "<data>")]
+async fn addaq(
+    socket_addr: SocketAddr,
+    pool: &rocket::State<MySqlPool>,
+    data: Json<AirQuality>,
+    _key: ApiKey<'_>,
+) -> Result<(), ErrorResponder> {
+    info!(target:"app::requests", "ADD AQ - From: {}", socket_addr.ip().to_string());
+    add_new_airquality(data, pool).await;
     Ok(())
 }
 
@@ -179,6 +187,8 @@ pub async fn main() {
             "/",
             routes![
                 index,
+                addaq,
+                addsub
             ],
         )
         .attach(CORS)
