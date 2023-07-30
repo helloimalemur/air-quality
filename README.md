@@ -1,10 +1,13 @@
 # air-quality
 WORK IN PROGRESS
+Notifications and Web Interface to notify subscribers of questionable/hazardous air quality in their area, using data from https://www.iqair.com/
+Project uses IQair's Community tier API.
 
 #### todo
     web interface
     add/update sub/alert thresholds
     cycle/alert on sub after data fetch
+    fetch per location - for subs, currently only fetches current location
 
 Notifications and Web Interface to notify subscribers of questionable/hazardous air quality in their area, using data from https://www.iqair.com/
 
