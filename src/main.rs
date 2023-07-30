@@ -174,6 +174,7 @@ pub async fn main() {
 
         loop {
             interval.tick().await;
+            // println!("tick")
         }
     });
 
