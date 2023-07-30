@@ -5,8 +5,9 @@
 
 #### todo
     web interface
-    add/update sub/alert thresholds
-    cycle/alert on sub after data fetch
+    add/update subs/alerts/thresholds
+    alerts (discord,email,sms)
+    cycle on subs after data fetch, alert using preferred alert type if over threshold
     fetch per location - for subs, currently only fetches current location
 
 
