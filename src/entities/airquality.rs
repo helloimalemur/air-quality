@@ -26,9 +26,9 @@ pub struct Data {
     pub state: String,
     pub country: String,
     pub location: Location,
-    pub forecasts: Vec<Forecast>,
+    // pub forecasts: Vec<Forecast>,
     pub current: Current,
-    pub history: History,
+    // pub history: History,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -69,7 +69,7 @@ pub struct Weather {
     pub tp: i64,
     pub pr: i64,
     pub hu: i64,
-    pub ws: i64,
+    pub ws: f64,
     pub wd: i64,
     pub ic: String,
 }
@@ -82,7 +82,7 @@ pub struct Pollution {
     pub mainus: String,
     pub aqicn: i64,
     pub maincn: String,
-    pub p2: P2,
+    // pub p2: P2,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]

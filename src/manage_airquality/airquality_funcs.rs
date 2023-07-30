@@ -35,7 +35,7 @@ pub async fn add_new_airquality(data: Json<AirQuality>, pool: &State<MySqlPool>)
             state: json.data.state.to_string(),
             country: json.data.country.to_string(),
             location: Location { type_field: json.data.location.type_field.to_string(), coordinates: vec![] },
-            forecasts: vec![],
+            // forecasts: vec![],
             current: Current {
                 weather: Weather {
                     ts: json.data.current.weather.ts.to_string(),
@@ -52,14 +52,14 @@ pub async fn add_new_airquality(data: Json<AirQuality>, pool: &State<MySqlPool>)
                     mainus: json.data.current.pollution.mainus.to_string(),
                     aqicn: json.data.current.pollution.aqicn,
                     maincn: json.data.current.pollution.maincn.to_string(),
-                    p2: P2 {
-                        conc: json.data.current.pollution.p2.conc,
-                        aqius: json.data.current.pollution.p2.aqius,
-                        aqicn: json.data.current.pollution.p2.aqicn,
-                    },
+                    // p2: P2 {
+                    //     conc: json.data.current.pollution.p2.conc,
+                    //     aqius: json.data.current.pollution.p2.aqius,
+                    //     aqicn: json.data.current.pollution.p2.aqicn,
+                    // },
                 }
             },
-            history: History { weather: vec![], pollution: vec![] },
+            // history: History { weather: vec![], pollution: vec![] },
         },
     };
 
@@ -74,14 +74,51 @@ pub async fn fetch_data_fire_alerts(settings_map: HashMap<String, String>) {
     let key = settings_map.get("iqair_key").unwrap();
     let url = format!("http://api.airvisual.com/v2/nearest_city?key={}", key);
     let req = reqwest::get(url).await.unwrap().text().await.unwrap();
-    let json = serde_json::from_str::<Value>(&*req).unwrap();
-    println!("{}", json.get("status").unwrap().to_string());
+    println!("{:?}", req.clone().replace("\\",""));
+    let json = serde_json::from_str::<AirQuality>(&*req).unwrap();
+    
+    // work around to deserializing issue for now
+    // println!("{}", json.get("status").unwrap().to_string());
+
+    // let entry: AirQuality = serde_json::from_str(json.as_str().unwrap()).unwrap();
+
+    // let new_entry: AirQuality = AirQuality { status: "".to_string(), data: Data {
+    //     city: "".to_string(),
+    //     state: "".to_string(),
+    //     country: "".to_string(),
+    //     location: Location { type_field: "".to_string(), coordinates: vec![] },
+    //     forecasts: vec![],
+    //     current: Current {
+    //         weather: Weather {
+    //             ts: "".to_string(),
+    //             tp: 0,
+    //             pr: 0,
+    //             hu: 0,
+    //             ws: 0,
+    //             wd: 0,
+    //             ic: "".to_string(),
+    //         },
+    //         pollution: Pollution {
+    //             ts: "".to_string(),
+    //             aqius: 0,
+    //             mainus: "".to_string(),
+    //             aqicn: 0,
+    //             maincn: "".to_string(),
+    //             p2: P2 {
+    //                 conc: 0.0,
+    //                 aqius: 0,
+    //                 aqicn: 0,
+    //             },
+    //         }
+    //     },
+    //     history: History { weather: vec![], pollution: vec![] },
+    // } };
 
 
     // let iqair_data: AirQuality = serde_json::from_value(json).unwrap();
     // println!("{:?}", iqair_data.status);
 
-    fire_alerts(json);
+    // fire_alerts(json);
     // add_new_airquality(json, pool);
 }
 
