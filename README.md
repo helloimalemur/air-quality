@@ -9,3 +9,10 @@ database_name = "database"
 api_key = "yourapikey"
 port = 8080
 ```
+
+
+## database user
+    CREATE USER 'dev'@'%' IDENTIFIED WITH sha256_password BY 'password';
+    CREATE USER 'dev'@'%' IDENTIFIED BY 'password';
+    GRANT ALL PRIVILEGES ON database.* TO 'dev'@'%';
+    FLUSH PRIVILEGES;
