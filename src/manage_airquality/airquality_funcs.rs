@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use std::fmt::format;
+use reqwest::header::{CONTENT_TYPE, HeaderMap, HeaderValue};
 use rocket::serde::json::Json;
 use rocket::State;
 use serde_json::{json, Value};
@@ -10,7 +11,7 @@ use crate::manage_airquality::airquality_funcs;
 use crate::manage_sub::sub_funcs;
 
 pub async fn new_airquality(new_airquality: AirQuality, pool: &rocket::State<MySqlPool>) {
-    let _insert = sqlx::query(
+    let insert = sqlx::query(
         "INSERT INTO readings (city, state, temp, pressure, humidity, wind_speed, current_pollution_aqius, main_pollutant)
         VALUES (?,?,?,?,?,?,?,?)")
         .bind(new_airquality.data.city)
@@ -23,6 +24,7 @@ pub async fn new_airquality(new_airquality: AirQuality, pool: &rocket::State<MyS
         .bind(new_airquality.data.current.pollution.mainus)
         .execute(&**pool)
         .await.unwrap();
+    println!("{:?}", insert);
 }
 
 
@@ -39,6 +41,14 @@ pub async fn fetch_data_fire_alerts(settings_map: HashMap<String, String>) {
     let url = format!("http://api.airvisual.com/v2/nearest_city?key={}", key);
     let req = reqwest::get(url).await.unwrap().text().await.unwrap();
     let json = serde_json::from_str::<AirQuality>(&*req).unwrap();
+
+
+    let client = reqwest::Client::new().post("http://127.0.0.1:8080/api/addaq")
+        .header("Content-Type","application/json")
+        .header("x-api-key",settings_map.get("api_key").unwrap())
+        .body(req)
+        .send().await;
+
     println!("{:?}", json);
 
 
