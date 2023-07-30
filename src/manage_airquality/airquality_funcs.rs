@@ -6,14 +6,17 @@ use crate::entities::sub::Sub;
 use crate::manage_airquality::airquality_funcs;
 use crate::manage_sub::sub_funcs;
 
-// pub async fn new_airquality(new_airquality: AirQuality, pool: &rocket::State<MySqlPool>) {
-//     let _insert = sqlx::query(
-//         "INSERT INTO sub (email, discord, additional_details)
-//         VALUES (?, ?, ?)")
-//
-//         .execute(&**pool)
-//         .await.unwrap();
-// }
+pub async fn new_airquality(new_airquality: AirQuality, pool: &rocket::State<MySqlPool>) {
+    let _insert = sqlx::query(
+        "INSERT INTO airquality (city, state, temp, current_pollution_aqius)
+        VALUES (?, ?, ?)")
+        .bind(new_airquality.data.city)
+        .bind(new_airquality.data.state)
+        .bind(new_airquality.data.current.weather.tp)
+        .bind(new_airquality.data.current.pollution.aqius)
+        .execute(&**pool)
+        .await.unwrap();
+}
 
 
 pub async fn add_new_airquality(data: Json<AirQuality>, pool: &State<MySqlPool>) {
@@ -53,7 +56,7 @@ pub async fn add_new_airquality(data: Json<AirQuality>, pool: &State<MySqlPool>)
         },
     };
 
-    println!("{new_airquality:?}")
+    println!("{new_airquality:?}");
 
-    // airquality_funcs::new_airquality(new_airquality, pool).await;
+    airquality_funcs::new_airquality(new_airquality, pool).await;
 }
