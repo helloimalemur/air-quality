@@ -159,36 +159,36 @@ pub async fn main() {
     let mut database_url: &str;
     database_url = "";
     println!("{}", database_url.clone());
-    // if std::str::from_utf8(&who.stdout).unwrap().contains("v1")
-    if !who {
-        database_url = settings_map.get("database_url").unwrap().as_str()
-    } else {
-        database_url = settings_map.get("remote_database_url").unwrap().as_str();
-    }
+    let database_url = &settings_map.get("database_url").unwrap().as_str();
+
 
     println!("{}", database_url);
     // launch rocket
-    tokio::spawn(async {
-        let start = Instant::now();
-        let mut interval = interval_at(start, tokio::time::Duration::from_secs(15));
 
-        loop {
-            interval.tick().await;
-            manage_airquality::airquality_funcs::fetch_data();
-        }
-    });
 
     let config = rocket::Config {
-        port: settings_map.get("port").unwrap().parse().unwrap(),
+        port: settings_map.clone().get("port").unwrap().parse().unwrap(),
         address: std::net::Ipv4Addr::new(0, 0, 0, 0).into(),
         ..rocket::Config::debug_default()
     };
 
     let pool = MySqlPool::connect(&database_url).await.expect("database connection");
 
+
+    let moved_settings = settings_map.clone();
+    tokio::spawn(async move {
+        let start = Instant::now();
+        let mut interval = interval_at(start, tokio::time::Duration::from_secs(15));
+
+        loop {
+            interval.tick().await;
+            manage_airquality::airquality_funcs::fetch_data(moved_settings.clone());
+        }
+    });
+
     custom(&config)
         .manage::<MySqlPool>(pool)
-        .manage::<HashMap<String, String>>(settings_map)
+        .manage::<HashMap<String, String>>(settings_map.clone())
         .mount(
             "/",
             routes![
