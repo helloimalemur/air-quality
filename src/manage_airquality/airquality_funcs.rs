@@ -67,9 +67,12 @@ pub async fn add_new_airquality(data: Json<AirQuality>, pool: &State<MySqlPool>)
 }
 
 
-pub fn fetch_data(map: HashMap<String, String>) {
+pub fn fetch_data_fire_alerts(map: HashMap<String, String>) {
     println!("fetching..");
     //TODO
     // let req = reqwest::get()
     println!("{:?}", map);
+
+
+    // add_new_airquality()
 }

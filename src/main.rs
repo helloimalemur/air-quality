@@ -182,7 +182,7 @@ pub async fn main() {
 
         loop {
             interval.tick().await;
-            manage_airquality::airquality_funcs::fetch_data(moved_settings.clone());
+            manage_airquality::airquality_funcs::fetch_data_fire_alerts(moved_settings.clone());
         }
     });
 
