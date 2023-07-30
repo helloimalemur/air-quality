@@ -10,7 +10,7 @@
     fetch per location - for subs, currently only fetches current location
 
 
-Create ./config/Settings.toml
+## Create ./config/Settings.toml
 ```toml
 database_url = "mysql://user:password@domain.com:3306/database"
 database_name = "database"
@@ -28,12 +28,8 @@ port = 8080
 
 
 
-### resources
-    https://api-docs.iqair.com/
 
-
-
-
+## database tables
 ```mysql
 CREATE TABLE `readings` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -55,3 +51,6 @@ CREATE TABLE `subs` (
     `additional_details` varchar(255) NOT NULL,
     PRIMARY KEY (`id`));
 ```
+
+### resources
+    https://api-docs.iqair.com/
