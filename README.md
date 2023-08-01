@@ -4,11 +4,11 @@
 ###### Project uses IQair's Community tier API.
 
 #### todo
-    web interface
-    add/update subs/alerts/thresholds
-    alerts (discord,email,sms)
+    add/update subs/alerts/thresholds endpoints
     cycle on subs after data fetch, alert using preferred alert type if over threshold
+    alerts (discord,email,sms)
     fetch per location - for subs, currently only fetches current location
+    web interface
 
 
 ## Create ./config/Settings.toml
