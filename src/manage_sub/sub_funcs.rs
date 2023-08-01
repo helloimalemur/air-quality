@@ -23,6 +23,7 @@ pub async fn add_new_sub(data: Json<Sub>, pool: &State<MySqlPool>) {
         email: data.email.to_string(),
         discord: "".to_string(),
         additional_details: data.additional_details.to_string(),
+        max_aqi: data.max_aqi,
     };
     sub_funcs::new_sub(new_sub, pool).await;
 }
