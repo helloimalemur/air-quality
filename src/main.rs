@@ -181,8 +181,8 @@ pub async fn main() {
         let mut interval = interval_at(start, tokio::time::Duration::from_secs(1200));
 
         loop {
-            interval.tick().await;
             manage_airquality::airquality_funcs::fetch_data_fire_alerts(moved_settings.clone()).await;
+            interval.tick().await;
         }
     });
 
