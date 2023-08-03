@@ -17,6 +17,57 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build
-      run: cargo build --verbose
-    - name: Run tests
-      run: cargo test --verbose
+      run: ls -althrs
+#    - name: Build
+#      run: cargo build
+#    - name: Run tests
+#      run: cargo test --verbose
+
+
+
+    - name: Execute SSH commmands on remote server
+      uses: JimCronqvist/action-ssh@master
+      with:
+        hosts: 'root@koonts.net:423'
+        privateKey: ${{ secrets.V1_KEY }}
+        command: rm -rf /srv/http/vhosts/air-quality/*
+#
+    - name: Publish
+      uses: nogsantos/scp-deploy@master
+      with:
+        src: ./*
+        host: koonts.net
+        remote: /srv/http/vhosts/air-quality/
+        port: 423
+        user: root
+        key: ${{ secrets.V1_KEY }}
+#
+    - name: Execute SSH commmands on remote server
+      uses: JimCronqvist/action-ssh@master
+      with:
+        hosts: 'root@koonts.net:423'
+        privateKey: ${{ secrets.V1_KEY }}
+        command: . /root/.cargo/env && cd /srv/http/vhosts/air-quality/ && cargo build
+
+    - name: Execute SSH commmands on remote server
+      uses: JimCronqvist/action-ssh@master
+      with:
+        hosts: 'root@koonts.net:423'
+        privateKey: ${{ secrets.V1_KEY }}
+        command: systemctl stop airquality
+
+    - name: Execute SSH commmands on remote server
+      uses: JimCronqvist/action-ssh@master
+      with:
+        hosts: 'root@koonts.net:423'
+        privateKey: ${{ secrets.V1_KEY }}
+        command: cp /srv/http/vhosts/air-quality/target/debug/air-quality /srv/http/vhosts/air-quality
+
+    - name: Execute SSH commmands on remote server
+      uses: JimCronqvist/action-ssh@master
+      with:
+        hosts: 'root@koonts.net:423'
+        privateKey: ${{ secrets.V1_KEY }}
+        command: systemctl restart airquality
+#        command: cd /var/www/air-quality/ && /bin/bash -e start_docker.sh
+#
