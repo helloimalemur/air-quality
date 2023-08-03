@@ -30,7 +30,7 @@ jobs:
       with:
         hosts: 'root@koonts.net:423'
         privateKey: ${{ secrets.V1_KEY }}
-        command: rm -rf /srv/http/vhosts/air-quality/*
+        command: rm -rf /srv/http/vhosts/air-quality/target/debug/*
 #
     - name: Publish
       uses: nogsantos/scp-deploy@master
