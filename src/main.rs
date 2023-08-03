@@ -178,7 +178,7 @@ pub async fn main() {
     let moved_settings = settings_map.clone();
     tokio::spawn(async move {
         let start = Instant::now();
-        let mut interval = interval_at(start, tokio::time::Duration::from_secs(15));
+        let mut interval = interval_at(start, tokio::time::Duration::from_secs(300));
 
         loop {
             interval.tick().await;
