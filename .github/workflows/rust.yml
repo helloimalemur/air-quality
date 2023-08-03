@@ -71,3 +71,4 @@ jobs:
         command: systemctl restart airquality
 #        command: cd /var/www/air-quality/ && /bin/bash -e start_docker.sh
 #
+#
