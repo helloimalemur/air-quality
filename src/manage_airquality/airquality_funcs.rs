@@ -64,6 +64,7 @@ pub async fn fetch_data_fire_alerts(
 }
 
 pub async fn check_threshold_for_subs(new_airquality: AirQuality, pool: &rocket::State<MySqlPool>) {
+    // TODO: loop on subs, compare current AQI with threshold and fire alert for those over threshold
     fire_alerts(new_airquality, pool).await;
 }
 
