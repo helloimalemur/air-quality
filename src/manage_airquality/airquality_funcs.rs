@@ -46,7 +46,7 @@ pub async fn fetch_data_fire_alerts(
     let key = settings_map.get("iqair_key").unwrap();
     let url = format!("http://api.airvisual.com/v2/nearest_city?key={}", key);
     let req = reqwest::get(url).await.unwrap().text().await.unwrap();
-    let json = serde_json::from_str::<AirQuality>(&*req).unwrap();
+    let json = serde_json::from_str::<AirQuality>(&*req).expect("UNABLE TO DESERIALIZE, CHECK iqAPI KEY");
 
 
     let client = reqwest::Client::new().post("http://127.0.0.1:8080/api/addaq")
