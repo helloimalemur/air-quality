@@ -4,7 +4,7 @@ use reqwest::header::{CONTENT_TYPE, HeaderMap, HeaderValue};
 use rocket::serde::json::Json;
 use rocket::State;
 use serde_json::{json, Value};
-use sqlx::{MySqlPool};
+use sqlx::{MySql, MySqlPool, Pool};
 use crate::entities::airquality::*;
 use crate::entities::sub::Sub;
 use crate::manage_airquality::airquality_funcs;
@@ -31,15 +31,16 @@ pub async fn new_airquality(new_airquality: AirQuality, pool: &rocket::State<MyS
 pub async fn add_new_airquality(data: Json<AirQuality>, pool: &State<MySqlPool>) {
     let json = data.clone().0;
 
+    check_threshold_for_subs(json.clone(), pool).await;
+
     new_airquality(json, pool).await;
 }
 
 
 pub async fn fetch_data_fire_alerts(
     settings_map: HashMap<String, String>,
-    data: Json<AirQuality>,
-    pool: &State<MySqlPool>,
-    sub: Json<Sub>
+    // data: Json<AirQuality>,
+    // sub: Json<Sub>
 ) {
     println!("fetching..");
     let key = settings_map.get("iqair_key").unwrap();
@@ -62,8 +63,10 @@ pub async fn fetch_data_fire_alerts(
     // add_new_airquality(json, pool);
 }
 
-pub async fn check_threshold() { todo!() }
+pub async fn check_threshold_for_subs(new_airquality: AirQuality, pool: &rocket::State<MySqlPool>) {
+    fire_alerts(new_airquality, pool).await;
+}
 
-pub async fn fire_alerts(json: AirQuality) {
+pub async fn fire_alerts(new_airquality: AirQuality, pool: &rocket::State<MySqlPool>) {
     todo!()
 }
