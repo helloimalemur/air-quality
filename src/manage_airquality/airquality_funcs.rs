@@ -35,7 +35,12 @@ pub async fn add_new_airquality(data: Json<AirQuality>, pool: &State<MySqlPool>)
 }
 
 
-pub async fn fetch_data_fire_alerts(settings_map: HashMap<String, String>) {
+pub async fn fetch_data_fire_alerts(
+    settings_map: HashMap<String, String>,
+    data: Json<AirQuality>,
+    pool: &State<MySqlPool>,
+    sub: Json<Sub>
+) {
     println!("fetching..");
     let key = settings_map.get("iqair_key").unwrap();
     let url = format!("http://api.airvisual.com/v2/nearest_city?key={}", key);
@@ -56,6 +61,8 @@ pub async fn fetch_data_fire_alerts(settings_map: HashMap<String, String>) {
     // fire_alerts(json).await;
     // add_new_airquality(json, pool);
 }
+
+pub async fn check_threshold() { todo!() }
 
 pub async fn fire_alerts(json: AirQuality) {
     todo!()
