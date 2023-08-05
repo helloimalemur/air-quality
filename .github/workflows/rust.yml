@@ -30,8 +30,8 @@ jobs:
       with:
         hosts: 'root@koonts.net:423'
         privateKey: ${{ secrets.V1_KEY }}
-        command: systemctl stop airquality && rm -rf /srv/http/vhosts/air-quality/*
-#        command: rm -rf /srv/http/vhosts/air-quality/target/debug/
+#        command: systemctl stop airquality && rm -rf /srv/http/vhosts/air-quality/*
+        command: rm -rf /srv/http/vhosts/air-quality/target/debug/
 #
     - uses: actions/checkout@v3
     - name: Build
