@@ -32,6 +32,10 @@ jobs:
         privateKey: ${{ secrets.V1_KEY }}
         command: rm -rf /srv/http/vhosts/air-quality/target/debug/
 #
+    - uses: actions/checkout@v3
+    - name: Build
+      run: ls -althrs
+
     - name: Publish
       uses: nogsantos/scp-deploy@master
       with:
