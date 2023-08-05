@@ -76,7 +76,13 @@ pub async fn check_threshold_for_subs(new_airquality: AirQuality, pool: &rocket:
     let mut subs = sqlx::query_as::<_, Sub>("SELECT * FROM subs")
         .fetch_all(&**pool).await;
 
-    println!("{:?}", subs);
+    if subs.is_ok() {
+        for (x,i) in subs.unwrap().iter().enumerate() {
+            println!("{}", i.email)
+        }
+    }
+
+
 
 
     // let mut rows = sqlx::query("SELECT * FROM users WHERE email = ?")
