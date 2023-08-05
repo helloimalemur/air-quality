@@ -3,6 +3,13 @@
 #### Notifications and Web Interface to notify subscribers of questionable/hazardous air quality in their area, using data from https://www.iqair.com/
 ###### Project uses IQair's Community tier API.
 
+[x] Add sub \
+[x] Fetch & store air quality reading \
+[x] Loop on subs and send alerts \
+[x] Alerts for discord \
+[ ] email alerts \
+[ ] mobile app?
+
 #### todo
     alert using preferred alert type if over threshold
     alerts (discord,email,sms)
