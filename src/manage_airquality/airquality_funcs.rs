@@ -76,9 +76,10 @@ pub async fn check_threshold_for_subs(new_airquality: AirQuality, pool: &rocket:
     if subs.is_ok() {
         for (x,i) in subs.unwrap().iter().enumerate() {
             // iterate over subs
-            println!("{} || {} > {}", i.email, i.max_aqi, new_airquality.data.current.pollution.aqius);
+
             if i.max_aqi as i64 > new_airquality.data.current.pollution.aqius {
             // if new_airquality.data.current.pollution.aqius > i.max_aqi as i64 {
+                println!("{} || {} > {}", i.email, i.max_aqi, new_airquality.data.current.pollution.aqius);
                 fire_alert(i.email.to_string(), i.discord.to_string(), i.max_aqi.to_string(), new_airquality.data.current.pollution.aqius.to_string(), pool).await;
             }
         }
