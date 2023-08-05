@@ -80,6 +80,9 @@ pub async fn check_threshold_for_subs(new_airquality: AirQuality, pool: &rocket:
         for (x,i) in subs.unwrap().iter().enumerate() {
             // iterate over subs
             println!("{} || {} > {}", i.email, i.max_aqi, new_airquality.data.current.pollution.aqius)
+            if i.max_aqi >= new_airquality.data.current.pollution.aqius {
+                fire_alert(i.email.to_string(), i.discord.to_string(), i.max_aqi.to_string(), pool).await;
+            }
         }
     }
 
@@ -99,6 +102,6 @@ pub async fn check_threshold_for_subs(new_airquality: AirQuality, pool: &rocket:
     // fire_alerts(new_airquality, pool).await;
 }
 
-// pub async fn fire_alerts(new_airquality: AirQuality, pool: &rocket::State<MySqlPool>) {
-//     todo!()
-// }
+pub async fn fire_alert(email: String, discord: String, max_aqi: String, pool: &rocket::State<MySqlPool>) {
+    todo!()
+}
