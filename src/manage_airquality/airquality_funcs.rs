@@ -4,11 +4,14 @@ use reqwest::header::{CONTENT_TYPE, HeaderMap, HeaderValue};
 use rocket::serde::json::Json;
 use rocket::State;
 use serde_json::{json, Value};
-use sqlx::{MySql, MySqlPool, Pool};
+use sqlx::{MySql, MySqlPool, Pool, Row};
 use crate::entities::airquality::*;
 use crate::entities::sub::Sub;
 use crate::manage_airquality::airquality_funcs;
 use crate::manage_sub::sub_funcs;
+use futures::TryStreamExt;
+use sqlx::mysql::MySqlRow;
+
 
 pub async fn insert_new_airquality_reading_into_db(new_airquality: AirQuality, pool: &rocket::State<MySqlPool>) {
     let insert = sqlx::query(
@@ -65,11 +68,25 @@ pub async fn fetch_data_fire_alerts(
 
 pub async fn check_threshold_for_subs(new_airquality: AirQuality, pool: &rocket::State<MySqlPool>) {
     // TODO: loop on subs, compare current AQI with threshold and fire alert for those over threshold
-    let subs = sqlx::query(
-        "SELECT * FROM readings"
-    ).execute(&**pool).await.unwrap();
+    // let subs = sqlx::query(
+    //     "SELECT * FROM readings"
+    // ).execute(&**pool).await.unwrap();
 
-    println!("{:?}", subs);
+
+    let mut stream = sqlx::query_as::<_, Sub>("SELECT * FROM subs")
+        .fetch(&**pool);
+
+    // println!("{:?}", subs);
+
+
+    // let mut rows = sqlx::query("SELECT * FROM users WHERE email = ?")
+    //     .bind(email)
+    //     .fetch(&mut conn);
+    //
+    // while let Some(row) = rows.try_next().await? {
+    //     // map the row into a user-defined domain type
+    //     let email: &str = row.try_get("email")?;
+    // }
 
 
     // fire_alerts(new_airquality, pool).await;
