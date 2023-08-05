@@ -177,7 +177,6 @@ pub async fn main() {
 
     let pool = MySqlPool::connect(&database_url).await.expect("database connection");
 
-
     let moved_settings = settings_map.clone();
     tokio::spawn(async move {
         let start = Instant::now();
