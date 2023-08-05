@@ -10,7 +10,7 @@ use crate::entities::sub::Sub;
 use crate::manage_airquality::airquality_funcs;
 use crate::manage_sub::sub_funcs;
 
-pub async fn new_airquality(new_airquality: AirQuality, pool: &rocket::State<MySqlPool>) {
+pub async fn insert_new_airquality_reading_into_db(new_airquality: AirQuality, pool: &rocket::State<MySqlPool>) {
     let insert = sqlx::query(
         "INSERT INTO readings (city, state, temp, pressure, humidity, wind_speed, current_pollution_aqius, main_pollutant)
         VALUES (?,?,?,?,?,?,?,?)")
@@ -28,12 +28,12 @@ pub async fn new_airquality(new_airquality: AirQuality, pool: &rocket::State<MyS
 }
 
 
-pub async fn add_new_airquality(data: Json<AirQuality>, pool: &State<MySqlPool>) {
+pub async fn add_new_airquality_reading(data: Json<AirQuality>, pool: &State<MySqlPool>) {
     let json = data.clone().0;
 
     check_threshold_for_subs(json.clone(), pool).await;
 
-    new_airquality(json, pool).await;
+    insert_new_airquality_reading_into_db(json, pool).await;
 }
 
 
@@ -65,9 +65,16 @@ pub async fn fetch_data_fire_alerts(
 
 pub async fn check_threshold_for_subs(new_airquality: AirQuality, pool: &rocket::State<MySqlPool>) {
     // TODO: loop on subs, compare current AQI with threshold and fire alert for those over threshold
-    fire_alerts(new_airquality, pool).await;
+    let subs = sqlx::query(
+        "SELECT * FROM readings"
+    ).execute(&**pool).await.unwrap();
+
+    println!("{:?}", subs);
+
+
+    // fire_alerts(new_airquality, pool).await;
 }
 
-pub async fn fire_alerts(new_airquality: AirQuality, pool: &rocket::State<MySqlPool>) {
-    todo!()
-}
+// pub async fn fire_alerts(new_airquality: AirQuality, pool: &rocket::State<MySqlPool>) {
+//     todo!()
+// }
