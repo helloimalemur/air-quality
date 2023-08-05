@@ -180,7 +180,7 @@ pub async fn main() {
     let moved_settings = settings_map.clone();
     tokio::spawn(async move {
         let start = Instant::now();
-        let mut interval = interval_at(start, tokio::time::Duration::from_secs(1200));
+        let mut interval = interval_at(start, tokio::time::Duration::from_secs(3600));
 
         loop {
             manage_airquality::airquality_funcs::fetch_data_fire_alerts(moved_settings.clone()).await;
