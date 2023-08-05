@@ -9,6 +9,8 @@ mod entities;
 mod manage_sub;
 mod manage_airquality;
 mod fairings;
+mod alerts;
+use alerts::alerts::*;
 use manage_sub::*;
 use manage_sub::sub_funcs::add_new_sub;
 use sqlx::{MySqlPool, Row};
@@ -31,7 +33,7 @@ use log4rs::encode::pattern::PatternEncoder;
 use log4rs::config::{Appender, Logger, Root};
 use rocket::outcome::Outcome;
 use crate::entities::airquality::AirQuality;
-use crate::manage_airquality::airquality_funcs::add_new_airquality;
+use crate::manage_airquality::airquality_funcs::add_new_airquality_reading;
 
 
 // // // // // // // // // // // // // // // // // // // // // // // //
@@ -52,8 +54,8 @@ async fn index(
     }
 }
 
-
-// curl -XPOST -H 'Content-Type:application/json' -H 'x-api-key:YOURAPIKEY' http://127.0.0.1:8030/api/addcontact -d '{"email": "test","discord": "test","additional_details": "test"}'
+// Add subscriber TODO: threshold
+// curl -XPOST -H 'Content-Type:application/json' -H 'x-api-key:YOURAPIKEY' http://127.0.0.1:8030/api/addsub -d '{"email": "test","discord": "test","additional_details": "test","max_aqi":"3"}'
 #[post("/api/addsub", data = "<data>")]
 async fn addsub(
     socket_addr: SocketAddr,
@@ -67,6 +69,7 @@ async fn addsub(
     Ok(())
 }
 
+// Add air quality reading
 // curl -XPOST -H 'Content-Type:application/json' -H 'x-api-key:YOURAPIKEY' http://127.0.0.1:8080/api/addaq -d ''
 #[post("/api/addaq", data = "<data>")]
 async fn addaq(
@@ -78,7 +81,7 @@ async fn addaq(
 ) -> Result<(), ErrorResponder> {
     info!(target:"app::requests", "ADD AQ - From: {}", socket_addr.ip().to_string());
     if key.0.to_string() == settings_map.get("api_key").unwrap().to_string() {
-        add_new_airquality(data, pool).await;
+        add_new_airquality_reading(data, pool).await;
     }
     Ok(())
 }

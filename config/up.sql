@@ -16,5 +16,5 @@ CREATE TABLE `subs` (
     `email` varchar(255) NOT NULL,
     `discord` varchar(255) NOT NULL,
     `additional_details` varchar(255) NOT NULL,
-    `max_aqi` varchar(255) NOT NULL,
+    `max_aqi` int(3) NOT NULL,
     PRIMARY KEY (`id`));
