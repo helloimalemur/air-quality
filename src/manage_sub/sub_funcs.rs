@@ -18,7 +18,6 @@ pub async fn new_sub(new_sub: Sub, pool: &rocket::State<MySqlPool>) {
 
 
 pub async fn add_new_sub(data: Json<Sub>, pool: &State<MySqlPool>) {
-
     let new_sub = Sub {
         id: rocket::serde::__private::Default::default(),
         email: data.email.to_string(),
