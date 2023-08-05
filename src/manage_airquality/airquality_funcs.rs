@@ -11,6 +11,7 @@ use crate::manage_airquality::airquality_funcs;
 use crate::manage_sub::sub_funcs;
 use futures::{StreamExt, TryStreamExt};
 use sqlx::mysql::MySqlRow;
+use crate::alerts::alerts::send_discord;
 
 
 pub async fn insert_new_airquality_reading_into_db(new_airquality: AirQuality, pool: &rocket::State<MySqlPool>) {
@@ -80,7 +81,8 @@ pub async fn check_threshold_for_subs(new_airquality: AirQuality, pool: &rocket:
         for (x,i) in subs.unwrap().iter().enumerate() {
             // iterate over subs
             println!("{} || {} > {}", i.email, i.max_aqi, new_airquality.data.current.pollution.aqius);
-            if i.max_aqi as i64 > new_airquality.data.current.pollution.aqius {
+            // if i.max_aqi as i64 > new_airquality.data.current.pollution.aqius {
+            if new_airquality.data.current.pollution.aqius > i.max_aqi as i64 {
                 fire_alert(i.email.to_string(), i.discord.to_string(), i.max_aqi.to_string(), pool).await;
             }
         }
@@ -103,5 +105,5 @@ pub async fn check_threshold_for_subs(new_airquality: AirQuality, pool: &rocket:
 }
 
 pub async fn fire_alert(email: String, discord: String, max_aqi: String, pool: &rocket::State<MySqlPool>) {
-    todo!()
+    send_discord(discord).await;
 }

@@ -9,6 +9,8 @@ mod entities;
 mod manage_sub;
 mod manage_airquality;
 mod fairings;
+mod alerts;
+use alerts::alerts::*;
 use manage_sub::*;
 use manage_sub::sub_funcs::add_new_sub;
 use sqlx::{MySqlPool, Row};
