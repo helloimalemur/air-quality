@@ -78,7 +78,8 @@ pub async fn check_threshold_for_subs(new_airquality: AirQuality, pool: &rocket:
 
     if subs.is_ok() {
         for (x,i) in subs.unwrap().iter().enumerate() {
-            println!("{}", i.email)
+            // iterate over subs
+            println!("{} || {} > {}", i.email, i.max_aqi, new_airquality.data.current.pollution.aqius)
         }
     }
 
