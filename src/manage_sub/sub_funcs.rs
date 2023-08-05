@@ -6,11 +6,12 @@ use crate::manage_sub::sub_funcs;
 
 pub async fn new_sub(new_sub: Sub, pool: &rocket::State<MySqlPool>) {
     let _insert = sqlx::query(
-        "INSERT INTO sub (email, discord, additional_details)
+        "INSERT INTO sub (email, discord, additional_details, max_aqi)
         VALUES (?, ?, ?)")
         .bind(new_sub.email)
         .bind(new_sub.discord)
         .bind(new_sub.additional_details)
+        .bind(new_sub.max_aqi)
         .execute(&**pool)
         .await.unwrap();
 }
