@@ -9,7 +9,7 @@ use crate::entities::airquality::*;
 use crate::entities::sub::Sub;
 use crate::manage_airquality::airquality_funcs;
 use crate::manage_sub::sub_funcs;
-use futures::TryStreamExt;
+use futures::{StreamExt, TryStreamExt};
 use sqlx::mysql::MySqlRow;
 
 
@@ -73,10 +73,10 @@ pub async fn check_threshold_for_subs(new_airquality: AirQuality, pool: &rocket:
     // ).execute(&**pool).await.unwrap();
 
 
-    let mut stream = sqlx::query_as::<_, Sub>("SELECT * FROM subs")
-        .fetch(&**pool);
+    let mut subs = sqlx::query_as::<_, Sub>("SELECT * FROM subs")
+        .fetch_all(&**pool).await;
 
-    // println!("{:?}", subs);
+    println!("{:?}", subs);
 
 
     // let mut rows = sqlx::query("SELECT * FROM users WHERE email = ?")
