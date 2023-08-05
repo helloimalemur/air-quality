@@ -69,10 +69,6 @@ pub async fn fetch_data_fire_alerts(
 
 pub async fn check_threshold_for_subs(new_airquality: AirQuality, pool: &rocket::State<MySqlPool>) {
     // TODO: loop on subs, compare current AQI with threshold and fire alert for those over threshold
-    // let subs = sqlx::query(
-    //     "SELECT * FROM readings"
-    // ).execute(&**pool).await.unwrap();
-
 
     let mut subs = sqlx::query_as::<_, Sub>("SELECT * FROM subs")
         .fetch_all(&**pool).await;
@@ -81,29 +77,14 @@ pub async fn check_threshold_for_subs(new_airquality: AirQuality, pool: &rocket:
         for (x,i) in subs.unwrap().iter().enumerate() {
             // iterate over subs
             println!("{} || {} > {}", i.email, i.max_aqi, new_airquality.data.current.pollution.aqius);
-            // if i.max_aqi as i64 > new_airquality.data.current.pollution.aqius {
-            if new_airquality.data.current.pollution.aqius > i.max_aqi as i64 {
-                fire_alert(i.email.to_string(), i.discord.to_string(), i.max_aqi.to_string(), pool).await;
+            if i.max_aqi as i64 > new_airquality.data.current.pollution.aqius {
+            // if new_airquality.data.current.pollution.aqius > i.max_aqi as i64 {
+                fire_alert(i.email.to_string(), i.discord.to_string(), i.max_aqi.to_string(), new_airquality.data.current.pollution.aqius.to_string(), pool).await;
             }
         }
     }
-
-
-
-
-    // let mut rows = sqlx::query("SELECT * FROM users WHERE email = ?")
-    //     .bind(email)
-    //     .fetch(&mut conn);
-    //
-    // while let Some(row) = rows.try_next().await? {
-    //     // map the row into a user-defined domain type
-    //     let email: &str = row.try_get("email")?;
-    // }
-
-
-    // fire_alerts(new_airquality, pool).await;
 }
 
-pub async fn fire_alert(email: String, discord: String, max_aqi: String, pool: &rocket::State<MySqlPool>) {
-    send_discord(discord).await;
+pub async fn fire_alert(email: String, discord: String, max_aqi: String, current_aqi: String, pool: &rocket::State<MySqlPool>) {
+    send_discord(discord, email, max_aqi, current_aqi).await;
 }
