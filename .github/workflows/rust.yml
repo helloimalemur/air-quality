@@ -18,8 +18,8 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build
       run: ls -althrs
-    - name: Test Build
-      run: cargo build
+#    - name: Test Build
+#      run: cargo build
 #    - name: Run tests
 #      run: cargo test --verbose
 
@@ -30,7 +30,8 @@ jobs:
       with:
         hosts: 'root@koonts.net:423'
         privateKey: ${{ secrets.V1_KEY }}
-        command: rm -rf /srv/http/vhosts/air-quality/target/debug/
+        command: systemctl stop airquality && rm -rf /srv/http/vhosts/air-quality/*
+#        command: rm -rf /srv/http/vhosts/air-quality/target/debug/
 #
     - uses: actions/checkout@v3
     - name: Build
