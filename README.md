@@ -55,6 +55,12 @@ CREATE TABLE `subs` (
     PRIMARY KEY (`id`));
 ```
 
+### Function tests
+```shell
+# Add Air Quality reading;
+curl -XPOST -H 'Content-Type:application/json' -H 'x-api-key:YOURAPIKEY' http://127.0.0.1:8080/api/addaq -d '<example_iqapi_response_below>'
+```
+
 ## Example IQAPI response
 ```json
 {
