@@ -1,16 +1,9 @@
 use std::collections::HashMap;
-use std::fmt::format;
-use reqwest::header::{CONTENT_TYPE, HeaderMap, HeaderValue};
 use rocket::serde::json::Json;
 use rocket::State;
-use serde_json::{json, Value};
-use sqlx::{MySql, MySqlPool, Pool, Row};
+use sqlx::{MySqlPool};
 use crate::entities::airquality::*;
 use crate::entities::sub::Sub;
-use crate::manage_airquality::airquality_funcs;
-use crate::manage_sub::sub_funcs;
-use futures::{StreamExt, TryStreamExt};
-use sqlx::mysql::MySqlRow;
 use crate::alerts::alerts::send_discord;
 
 
@@ -50,10 +43,10 @@ pub async fn fetch_data_fire_alerts(
     let key = settings_map.get("iqair_key").unwrap();
     let url = format!("http://api.airvisual.com/v2/nearest_city?key={}", key);
     let req = reqwest::get(url).await.unwrap().text().await.unwrap();
-    let json = serde_json::from_str::<AirQuality>(&*req).expect("UNABLE TO DESERIALIZE, CHECK iqAPI KEY");
+    let _json = serde_json::from_str::<AirQuality>(&*req).expect("UNABLE TO DESERIALIZE, CHECK iqAPI KEY");
 
 
-    let client = reqwest::Client::new().post("http://127.0.0.1:8080/api/addaq")
+    let _client = reqwest::Client::new().post("http://127.0.0.1:8080/api/addaq")
         .header("Content-Type","application/json")
         .header("x-api-key",settings_map.get("api_key").unwrap())
         .body(req)
@@ -70,11 +63,11 @@ pub async fn fetch_data_fire_alerts(
 pub async fn check_threshold_for_subs(new_airquality: AirQuality, pool: &rocket::State<MySqlPool>) {
     // TODO: loop on subs, compare current AQI with threshold and fire alert for those over threshold
 
-    let mut subs = sqlx::query_as::<_, Sub>("SELECT * FROM subs")
+    let subs = sqlx::query_as::<_, Sub>("SELECT * FROM subs")
         .fetch_all(&**pool).await;
 
     if subs.is_ok() {
-        for (x,i) in subs.unwrap().iter().enumerate() {
+        for (_x,i) in subs.unwrap().iter().enumerate() {
             // iterate over subs
 
             // if i.max_aqi as i64 > new_airquality.data.current.pollution.aqius {
@@ -86,6 +79,6 @@ pub async fn check_threshold_for_subs(new_airquality: AirQuality, pool: &rocket:
     }
 }
 
-pub async fn fire_alert(email: String, discord: String, max_aqi: String, current_aqi: String, pool: &rocket::State<MySqlPool>) {
+pub async fn fire_alert(email: String, discord: String, max_aqi: String, current_aqi: String, _pool: &rocket::State<MySqlPool>) {
     send_discord(discord, email, max_aqi, current_aqi).await;
 }

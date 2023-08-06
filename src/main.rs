@@ -10,28 +10,24 @@ mod manage_sub;
 mod manage_airquality;
 mod fairings;
 mod alerts;
-use alerts::alerts::*;
-use manage_sub::*;
 use manage_sub::sub_funcs::add_new_sub;
-use sqlx::{MySqlPool, Row};
+use sqlx::{MySqlPool};
 use config::Config;
 use rocket::tokio::time::{interval_at, Instant};
 use rocket::{custom, tokio};
-use rocket::http::{Cookie, Header, Status};
-use rocket::request::{FromRequest, Request};
+use rocket::http::{Header, Status};
+use rocket::request::{Request};
 use rocket::{Response};
 use rocket::fairing::{Fairing, Info, Kind};
 use crate::fairings::apikey_fairing::ApiKey;
-use rocket::http::{CookieJar};
 use crate::entities::sub::Sub;
-use log::{error, info, warn};
-use log::{debug, LevelFilter};
+use log::{info};
+use log::{LevelFilter};
 use log4rs::append::console::ConsoleAppender;
 use log4rs::Config as LogConfig;
 use log4rs::append::file::FileAppender;
 use log4rs::encode::pattern::PatternEncoder;
 use log4rs::config::{Appender, Logger, Root};
-use rocket::outcome::Outcome;
 use crate::entities::airquality::AirQuality;
 use crate::manage_airquality::airquality_funcs::add_new_airquality_reading;
 
@@ -59,13 +55,18 @@ async fn index(
 async fn addsub(
     socket_addr: SocketAddr,
     pool: &rocket::State<MySqlPool>,
+    settings_map: &rocket::State<HashMap<String, String>>,
     data: Json<Sub>,
-    _key: ApiKey<'_>,
-) -> Result<(), ErrorResponder> {
+    key: ApiKey<'_>,
+) -> &'static str {
     // let mail_data = data.clone();
-    info!(target:"app::requests", "ADD SUB - From: {}", socket_addr.ip().to_string());
-    add_new_sub(data, pool).await;
-    Ok(())
+    if key.0.to_string() == settings_map.get("api_key").unwrap().to_string() {
+        add_new_sub(data, pool).await;
+        info!(target:"app::requests", "ADD SUB - From: {}", socket_addr.ip().to_string());
+        "sub added"
+    } else {
+        "invalid api-key"
+    }
 }
 
 // Add air quality reading
@@ -76,12 +77,14 @@ async fn addaq(
     settings_map: &rocket::State<HashMap<String, String>>,
     data: Json<AirQuality>,
     key: ApiKey<'_>,
-) -> Result<(), ErrorResponder> {
-    info!(target:"app::requests", "ADD AQ - From: {}", socket_addr.ip().to_string());
+) -> &'static str {
     if key.0.to_string() == settings_map.get("api_key").unwrap().to_string() {
         add_new_airquality_reading(data, pool).await;
+        info!(target:"app::requests", "ADD AQ - From: {}", socket_addr.ip().to_string());
+        "reading added"
+    } else {
+        "invalid api-key"
     }
-    Ok(())
 }
 
 
@@ -101,7 +104,7 @@ impl Fairing for CORS {
         }
     }
 
-    async fn on_response<'r>(&self, request: &'r Request<'_>, response: &mut Response<'r>) {
+    async fn on_response<'r>(&self, _request: &'r Request<'_>, response: &mut Response<'r>) {
         response.set_header(Header::new("Access-Control-Allow-Origin", "*"));
         // response.set_header(Header::new("Access-Control-Allow-Origin", "https://yourlinuxadmin.com/"));
         response.set_header(Header::new(
@@ -133,6 +136,7 @@ pub async fn main() {
         .build("log/requests.log")
         .unwrap();
 
+    #[allow(unused_variables)]
     let config = LogConfig::builder()
         .appender(Appender::builder().build("stdout", Box::new(stdout)))
         .appender(Appender::builder().build("requests", Box::new(requests)))
@@ -141,7 +145,7 @@ pub async fn main() {
         .build(Root::builder().appender("stdout").build(LevelFilter::Warn))
         .unwrap();
 
-    let handle = log4rs::init_config(config).unwrap();
+
 
     info!(target: "app::requests","Starting");
 
@@ -151,13 +155,13 @@ pub async fn main() {
     let _database_name = settings_map.get("database_name").unwrap().as_str();
     ////////////
 
-    let who = process::Command::new("hostname")
+    let _who = process::Command::new("hostname")
         .stdout(Stdio::inherit())
         .stderr(Stdio::inherit())
         .output()
         .is_ok();
 
-    let mut database_url: &str;
+    let database_url: &str;
     database_url = "";
     println!("{}", database_url.clone());
     let database_url = &settings_map.get("database_url").unwrap().as_str();

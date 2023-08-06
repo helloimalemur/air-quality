@@ -58,11 +58,11 @@ CREATE TABLE `subs` (
 ### Function tests
 ```shell
 # Add Subscriber;
-curl -XPOST -H 'Content-Type:application/json' -H 'x-api-key:YOURAPIKEY' http://127.0.0.1:8080/api/addsub -d '{"email": "test","discord": "test","additional_details": "test","max_aqi":3}'
+curl -XPOST -H 'Content-Type:application/json' -H 'x-api-key:YOURAPIKEY' http://127.0.0.1:7080/api/addsub -d '{"email": "test","discord": "test","additional_details": "test","max_aqi":3}'
 ```
 ```shell
 # Add Air Quality reading;
-curl -XPOST -H 'Content-Type:application/json' -H 'x-api-key:YOURAPIKEY' http://127.0.0.1:8080/api/addaq -d '<example_iqapi_response_below>'
+curl -XPOST -H 'Content-Type:application/json' -H 'x-api-key:YOURAPIKEY' http://127.0.0.1:7080/api/addaq -d '<example_iqapi_response_below>'
 ```
 
 ## Example IQAPI response

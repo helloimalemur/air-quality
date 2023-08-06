@@ -1,4 +1,3 @@
-use std::cmp::max;
 use std::process;
 use reqwest::ClientBuilder;
 use reqwest::header::{CONTENT_TYPE};
@@ -8,7 +7,12 @@ use reqwest::header::{CONTENT_TYPE};
 pub async fn send_discord(discord: String, email: String, max_aqi: String, current_aqi: String) {
     println!("{} {} {}", discord, email, max_aqi);
     let message = format!("OVER AQI {} > {}", current_aqi, max_aqi);
-    send(discord.as_str(), "AQ", message).await;
+    if discord.contains("https://discord.com/api/webhooks/") {
+        println!("alert fired for {}", email);
+        send(discord.as_str(), "AQ", message).await;
+    } else {
+        println!("invalid discord settings for {}", email);
+    }
 
 }
 
