@@ -54,8 +54,7 @@ async fn index(
     }
 }
 
-// Add subscriber TODO: threshold
-// curl -XPOST -H 'Content-Type:application/json' -H 'x-api-key:YOURAPIKEY' http://127.0.0.1:8030/api/addsub -d '{"email": "test","discord": "test","additional_details": "test","max_aqi":"3"}'
+// Add subscriber
 #[post("/api/addsub", data = "<data>")]
 async fn addsub(
     socket_addr: SocketAddr,
@@ -70,7 +69,6 @@ async fn addsub(
 }
 
 // Add air quality reading
-// curl -XPOST -H 'Content-Type:application/json' -H 'x-api-key:YOURAPIKEY' http://127.0.0.1:8080/api/addaq -d ''
 #[post("/api/addaq", data = "<data>")]
 async fn addaq(
     socket_addr: SocketAddr,
