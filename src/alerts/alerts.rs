@@ -4,9 +4,9 @@ use reqwest::header::{CONTENT_TYPE};
 
 
 
-pub async fn send_discord(discord: String, email: String, max_aqi: String, current_aqi: String) {
+pub async fn send_discord(discord: String, email: String, max_aqi: String, current_aqi: String, current_city: String) {
     println!("{} {} {}", discord, email, max_aqi);
-    let message = format!("OVER AQI {} > {}", current_aqi, max_aqi);
+    let message = format!("AQI over threshold in {}.. {} > {}", current_city, current_aqi, max_aqi);
     if discord.contains("https://discord.com/api/webhooks/") {
         println!("alert fired for {}", email);
         send(discord.as_str(), "AQ", message).await;
