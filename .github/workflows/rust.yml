@@ -120,7 +120,7 @@ jobs:
       with:
         hosts: 'root@root.koonts.net:423'
         privateKey: ${{ secrets.V1A_KEY }}
-        command: if [[ -f /root/airquality_Settings.toml ]]; then cp /root/airquality_Settings.toml /usr/share/airquality/config/Settings.toml; else echo "na" fi
+        command: if [[ -f /root/airquality_Settings.toml ]]; then cp /root/airquality_Settings.toml /usr/share/airquality/config/Settings.toml; else echo "na"; fi
 
     - name: Execute SSH commmands on remote server
       uses: JimCronqvist/action-ssh@master
