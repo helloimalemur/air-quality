@@ -63,12 +63,12 @@ jobs:
         privateKey: ${{ secrets.V1A_KEY }}
         command: cd /usr/share/airquality/ && /root/.cargo/bin/cargo build
 
-    - name: stop service
+    - name: stop or create service
       uses: JimCronqvist/action-ssh@master
       with:
         hosts: 'root@root.koonts.net:423'
         privateKey: ${{ secrets.V1A_KEY }}
-        command: systemctl stop airquality
+        command: if [[ -f /etc/systemd/system/airquality.service ]]; then systemctl stop airquality; else cp ./assets/airquality.service /etc/systemd/system/airquality.service && systemctl daemon-reload; fi
 
     - name: copy executable
       uses: JimCronqvist/action-ssh@master
