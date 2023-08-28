@@ -1,4 +1,2 @@
 #!/bin/bash
-cd /srv/http/vhosts/air-quality/
-#./target/debug/air-quality
-/srv/http/vhosts/air-quality/air-quality
+cd /usr/share/airquality/ && /usr/share/airquality/air-quality

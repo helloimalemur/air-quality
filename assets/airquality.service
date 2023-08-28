@@ -8,7 +8,7 @@ Restart=always
 RestartSec=1
 User=root
 Group=root
-ExecStart=/usr/share/airquality/air-quality
+ExecStart=/usr/share/airquality/run.sh
 
 StandardOutput=append:/usr/share/airquality/running.log
 StandardError=append:/usr/share/airquality/error.log
