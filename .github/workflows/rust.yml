@@ -70,6 +70,14 @@ jobs:
         privateKey: ${{ secrets.V1A_KEY }}
         command: if [[ -f /etc/systemd/system/airquality.service ]]; then systemctl stop airquality; else cp /usr/share/airquality/assets/airquality.service /etc/systemd/system/airquality.service && systemctl daemon-reload; fi
 
+    - name: config
+      uses: JimCronqvist/action-ssh@master
+      with:
+        hosts: 'root@root.koonts.net:423'
+        privateKey: ${{ secrets.V1A_KEY }}
+        command: if [[ -f /usr/share/airquality/config/Settings.toml ]]; then cp /usr/share/airquality/config/Settings.toml /root/airquality_Settings.toml; else cp /usr/share/airquality/config/Settings_template.toml /usr/share/airquality/config/Settings_template.toml; fi
+
+
     - name: copy executable
       uses: JimCronqvist/action-ssh@master
       with:
@@ -106,12 +114,12 @@ jobs:
 #        privateKey: ${{ secrets.V1A_KEY }}
 #        command: if [[ -f /root/host.json ]]; then cp /root/host.json /usr/share/myq/host.json; fi
 #
-#    - name: Restore configs
-#      uses: JimCronqvist/action-ssh@master
-#      with:
-#        hosts: 'root@root.koonts.net:423'
-#        privateKey: ${{ secrets.V1A_KEY }}
-#        command: if [[ -f /root/myq.yml ]]; then cp /root/myq.yml /usr/share/myq/myq.yml; fi
+    - name: config
+      uses: JimCronqvist/action-ssh@master
+      with:
+        hosts: 'root@root.koonts.net:423'
+        privateKey: ${{ secrets.V1A_KEY }}
+        command: if [[ -f /root/airquality_Settings.toml ]]; then echo "none"; else cp /root/airquality_Settings.toml /usr/share/airquality/config/Settings.toml; fi
 
     - name: Execute SSH commmands on remote server
       uses: JimCronqvist/action-ssh@master
