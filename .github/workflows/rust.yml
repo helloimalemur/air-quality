@@ -19,10 +19,10 @@ jobs:
     - name: Clone
       run: ls -althrs
 
-#    - name: Test Build
-#      run: cargo build
-#    - name: Test Cleanup
-#      run: cargo clean
+    - name: Test Build
+      run: cargo build
+    - name: Test Cleanup
+      run: cargo clean
 
 
 #    - name: Backup configs
