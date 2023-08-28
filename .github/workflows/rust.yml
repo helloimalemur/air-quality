@@ -16,64 +16,108 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Build
+    - name: Clone
       run: ls -althrs
-#    - name: Test Build
-#      run: cargo build
-#    - name: Run tests
-#      run: cargo test --verbose
 
+    - name: Test Build
+      run: cargo build
+    - name: Test Cleanup
+      run: cargo clean
 
-
-    - name: Execute SSH commmands on remote server
-      uses: JimCronqvist/action-ssh@master
-      with:
-        hosts: 'root@koonts.net:423'
-        privateKey: ${{ secrets.V1_KEY }}
-#        command: systemctl stop airquality && rm -rf /srv/http/vhosts/air-quality/*
-        command: rm -rf /srv/http/vhosts/air-quality/target/debug/
+#    - name: Backup configs
+#      uses: JimCronqvist/action-ssh@master
+#      with:
+#        hosts: 'root@root.koonts.net:423'
+#        privateKey: ${{ secrets.KALE_KEY }}
+#        command: if [[ -f /usr/share/myq/host.json ]]; then cp /usr/share/myq/host.json /root/host.json; fi
 #
-    - uses: actions/checkout@v3
-    - name: Build
-      run: ls -althrs
+#    - name: Backup configs
+#      uses: JimCronqvist/action-ssh@master
+#      with:
+#        hosts: 'root@root.koonts.net:423'
+#        privateKey: ${{ secrets.KALE_KEY }}
+#        command: if [[ -f /usr/share/myq/myq.yml ]]; then cp /usr/share/myq/myq.yml /root/myq.yml; fi
 
-    - name: Publish
+#
+#    - name: Remove old build
+#      uses: JimCronqvist/action-ssh@master
+#      with:
+#        hosts: 'root@root.koonts.net:423'
+#        privateKey: ${{ secrets.KALE_KEY }}
+#        command: rm -rf /usr/share/myq/target/debug/
+##
+    - name: Copy repo contents
       uses: nogsantos/scp-deploy@master
       with:
         src: ./*
-        host: koonts.net
-        remote: /srv/http/vhosts/air-quality/
+        host: root.koonts.net
+        remote: /usr/share/airquality/
         port: 423
         user: root
-        key: ${{ secrets.V1_KEY }}
+        key: ${{ secrets.KALE_KEY }}
 #
-    - name: Execute SSH commmands on remote server
+    - name: cargo build
       uses: JimCronqvist/action-ssh@master
       with:
-        hosts: 'root@koonts.net:423'
-        privateKey: ${{ secrets.V1_KEY }}
-        command: . /root/.cargo/env && cd /srv/http/vhosts/air-quality/ && cargo build
+        hosts: 'root@root.koonts.net:423'
+        privateKey: ${{ secrets.KALE_KEY }}
+        command: cd /usr/share/airquality/ && /root/.cargo/bin/cargo build
 
-    - name: Execute SSH commmands on remote server
+    - name: stop service
       uses: JimCronqvist/action-ssh@master
       with:
-        hosts: 'root@koonts.net:423'
-        privateKey: ${{ secrets.V1_KEY }}
+        hosts: 'root@root.koonts.net:423'
+        privateKey: ${{ secrets.KALE_KEY }}
         command: systemctl stop airquality
 
-    - name: Execute SSH commmands on remote server
+    - name: copy executable
       uses: JimCronqvist/action-ssh@master
       with:
-        hosts: 'root@koonts.net:423'
-        privateKey: ${{ secrets.V1_KEY }}
-        command: cp /srv/http/vhosts/air-quality/target/debug/air-quality /srv/http/vhosts/air-quality
+        hosts: 'root@root.koonts.net:423'
+        privateKey: ${{ secrets.KALE_KEY }}
+        command: cp /usr/share/airquality/target/debug/air-quality /usr/share/airquality/air-quality
+
+#    - name: copy assets
+#      uses: JimCronqvist/action-ssh@master
+#      with:
+#        hosts: 'root@root.koonts.net:423'
+#        privateKey: ${{ secrets.KALE_KEY }}
+#        command: cp -r /usr/share/airquality/src/assets/* /usr/share/airquality/
+
+    - name: copy assets
+      uses: JimCronqvist/action-ssh@master
+      with:
+        hosts: 'root@root.koonts.net:423'
+        privateKey: ${{ secrets.KALE_KEY }}
+        command: cp /usr/share/airquality/airquality.service /usr/lib/systemd/system/airquality.service
+
+    - name: copy assets
+      uses: JimCronqvist/action-ssh@master
+      with:
+        hosts: 'root@root.koonts.net:423'
+        privateKey: ${{ secrets.KALE_KEY }}
+        command: systemctl daemon-reload
+
+
+#    - name: Restore configs
+#      uses: JimCronqvist/action-ssh@master
+#      with:
+#        hosts: 'root@root.koonts.net:423'
+#        privateKey: ${{ secrets.KALE_KEY }}
+#        command: if [[ -f /root/host.json ]]; then cp /root/host.json /usr/share/myq/host.json; fi
+#
+#    - name: Restore configs
+#      uses: JimCronqvist/action-ssh@master
+#      with:
+#        hosts: 'root@root.koonts.net:423'
+#        privateKey: ${{ secrets.KALE_KEY }}
+#        command: if [[ -f /root/myq.yml ]]; then cp /root/myq.yml /usr/share/myq/myq.yml; fi
 
     - name: Execute SSH commmands on remote server
       uses: JimCronqvist/action-ssh@master
       with:
-        hosts: 'root@koonts.net:423'
-        privateKey: ${{ secrets.V1_KEY }}
+        hosts: 'root@root.koonts.net:423'
+        privateKey: ${{ secrets.KALE_KEY }}
         command: systemctl restart airquality
-#        command: cd /var/www/air-quality/ && /bin/bash -e start_docker.sh
-#
+#        command: cd /usr/share/myq/ && /bin/bash -e start_docker.sh
 #
