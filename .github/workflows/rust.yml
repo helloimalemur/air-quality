@@ -129,4 +129,3 @@ jobs:
         privateKey: ${{ secrets.V1A_KEY }}
         command: systemctl restart airquality
 #        command: cd /usr/share/myq/ && /bin/bash -e start_docker.sh
-#
