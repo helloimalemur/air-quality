@@ -28,14 +28,14 @@ jobs:
 #      uses: JimCronqvist/action-ssh@master
 #      with:
 #        hosts: 'root@root.koonts.net:423'
-#        privateKey: ${{ secrets.KALE_KEY }}
+#        privateKey: ${{ secrets.V1A_KEY }}
 #        command: if [[ -f /usr/share/myq/host.json ]]; then cp /usr/share/myq/host.json /root/host.json; fi
 #
 #    - name: Backup configs
 #      uses: JimCronqvist/action-ssh@master
 #      with:
 #        hosts: 'root@root.koonts.net:423'
-#        privateKey: ${{ secrets.KALE_KEY }}
+#        privateKey: ${{ secrets.V1A_KEY }}
 #        command: if [[ -f /usr/share/myq/myq.yml ]]; then cp /usr/share/myq/myq.yml /root/myq.yml; fi
 
 #
@@ -43,7 +43,7 @@ jobs:
 #      uses: JimCronqvist/action-ssh@master
 #      with:
 #        hosts: 'root@root.koonts.net:423'
-#        privateKey: ${{ secrets.KALE_KEY }}
+#        privateKey: ${{ secrets.V1A_KEY }}
 #        command: rm -rf /usr/share/myq/target/debug/
 ##
     - name: Copy repo contents
@@ -54,48 +54,48 @@ jobs:
         remote: /usr/share/airquality/
         port: 423
         user: root
-        key: ${{ secrets.KALE_KEY }}
+        key: ${{ secrets.V1A_KEY }}
 #
     - name: cargo build
       uses: JimCronqvist/action-ssh@master
       with:
         hosts: 'root@root.koonts.net:423'
-        privateKey: ${{ secrets.KALE_KEY }}
+        privateKey: ${{ secrets.V1A_KEY }}
         command: cd /usr/share/airquality/ && /root/.cargo/bin/cargo build
 
     - name: stop service
       uses: JimCronqvist/action-ssh@master
       with:
         hosts: 'root@root.koonts.net:423'
-        privateKey: ${{ secrets.KALE_KEY }}
+        privateKey: ${{ secrets.V1A_KEY }}
         command: systemctl stop airquality
 
     - name: copy executable
       uses: JimCronqvist/action-ssh@master
       with:
         hosts: 'root@root.koonts.net:423'
-        privateKey: ${{ secrets.KALE_KEY }}
+        privateKey: ${{ secrets.V1A_KEY }}
         command: cp /usr/share/airquality/target/debug/air-quality /usr/share/airquality/air-quality
 
 #    - name: copy assets
 #      uses: JimCronqvist/action-ssh@master
 #      with:
 #        hosts: 'root@root.koonts.net:423'
-#        privateKey: ${{ secrets.KALE_KEY }}
+#        privateKey: ${{ secrets.V1A_KEY }}
 #        command: cp -r /usr/share/airquality/src/assets/* /usr/share/airquality/
 
     - name: copy assets
       uses: JimCronqvist/action-ssh@master
       with:
         hosts: 'root@root.koonts.net:423'
-        privateKey: ${{ secrets.KALE_KEY }}
+        privateKey: ${{ secrets.V1A_KEY }}
         command: cp /usr/share/airquality/airquality.service /usr/lib/systemd/system/airquality.service
 
     - name: copy assets
       uses: JimCronqvist/action-ssh@master
       with:
         hosts: 'root@root.koonts.net:423'
-        privateKey: ${{ secrets.KALE_KEY }}
+        privateKey: ${{ secrets.V1A_KEY }}
         command: systemctl daemon-reload
 
 
@@ -103,21 +103,21 @@ jobs:
 #      uses: JimCronqvist/action-ssh@master
 #      with:
 #        hosts: 'root@root.koonts.net:423'
-#        privateKey: ${{ secrets.KALE_KEY }}
+#        privateKey: ${{ secrets.V1A_KEY }}
 #        command: if [[ -f /root/host.json ]]; then cp /root/host.json /usr/share/myq/host.json; fi
 #
 #    - name: Restore configs
 #      uses: JimCronqvist/action-ssh@master
 #      with:
 #        hosts: 'root@root.koonts.net:423'
-#        privateKey: ${{ secrets.KALE_KEY }}
+#        privateKey: ${{ secrets.V1A_KEY }}
 #        command: if [[ -f /root/myq.yml ]]; then cp /root/myq.yml /usr/share/myq/myq.yml; fi
 
     - name: Execute SSH commmands on remote server
       uses: JimCronqvist/action-ssh@master
       with:
         hosts: 'root@root.koonts.net:423'
-        privateKey: ${{ secrets.KALE_KEY }}
+        privateKey: ${{ secrets.V1A_KEY }}
         command: systemctl restart airquality
 #        command: cd /usr/share/myq/ && /bin/bash -e start_docker.sh
 #

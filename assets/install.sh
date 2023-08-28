@@ -15,7 +15,7 @@ sudo git clone https://github.com/helloimalemur/rust-myq-garage.git /usr/share/m
 sudo chown -R "$SERVICE_USER":"$SERVICE_USER" /usr/share/myq/;
 sudo chmod -R 0700 /usr/share/myq/;
 #cd rust-myq-garage/;
-sudo su -c 'cargo build --manifest-path=/usr/share/myq/rust-myq-garage/Cargo.toml' myq;
+sudo su -c 'cargo build --manifest-path=/usr/share/myq/rust-myq-garage/Cargo.toml.old' myq;
 sudo cp /usr/share/myq/rust-myq-garage/target/debug/rust-myq-garage /usr/share/myq/myq;
 sudo cp src/assets/myq.service /etc/systemd/system/myq.service;
 sudo systemctl daemon-reload;
