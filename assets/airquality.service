@@ -1,5 +1,5 @@
 [Unit]
-Description=myq
+Description=airquality
 After=network.target
 
 [Service]
