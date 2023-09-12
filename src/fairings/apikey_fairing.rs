@@ -1,6 +1,6 @@
 use rocket::http::Status;
-use rocket::outcome::{Outcome};
-use rocket::request::{Request, FromRequest};
+use rocket::outcome::Outcome;
+use rocket::request::{FromRequest, Request};
 
 #[derive(PartialEq)]
 pub struct ApiKey<'r>(pub(crate) &'r str);
@@ -28,8 +28,6 @@ impl<'r> FromRequest<'r> for ApiKey<'r> {
         }
     }
 }
-
-
 
 // impl stringify for ApiKey<'_> {
 //     fn stringify(key: ApiKey) -> String {

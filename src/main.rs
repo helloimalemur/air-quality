@@ -1,47 +1,43 @@
 #[macro_use]
 extern crate rocket;
-use rocket::serde::{json::Json};
+use rocket::serde::json::Json;
 use std::collections::HashMap;
 use std::net::SocketAddr;
 use std::process;
 use std::process::Stdio;
-mod entities;
-mod manage_sub;
-mod manage_airquality;
-mod fairings;
 mod alerts;
-use manage_sub::sub_funcs::add_new_sub;
-use sqlx::{MySqlPool};
-use config::Config;
-use rocket::tokio::time::{interval_at, Instant};
-use rocket::{custom, tokio};
-use rocket::http::{Header, Status};
-use rocket::request::{Request};
-use rocket::{Response};
-use rocket::fairing::{Fairing, Info, Kind};
-use crate::fairings::apikey_fairing::ApiKey;
-use crate::entities::sub::Sub;
-use log::{info};
-use log::{LevelFilter};
-use log4rs::append::console::ConsoleAppender;
-use log4rs::Config as LogConfig;
-use log4rs::append::file::FileAppender;
-use log4rs::encode::pattern::PatternEncoder;
-use log4rs::config::{Appender, Logger, Root};
+mod entities;
+mod fairings;
+mod manage_airquality;
+mod manage_sub;
 use crate::entities::airquality::AirQuality;
+use crate::entities::sub::Sub;
+use crate::fairings::apikey_fairing::ApiKey;
 use crate::manage_airquality::airquality_funcs::add_new_airquality_reading;
-
+use config::Config;
+use log::info;
+use log::LevelFilter;
+use log4rs::append::console::ConsoleAppender;
+use log4rs::append::file::FileAppender;
+use log4rs::config::{Appender, Logger, Root};
+use log4rs::encode::pattern::PatternEncoder;
+use log4rs::Config as LogConfig;
+use manage_sub::sub_funcs::add_new_sub;
+use rocket::fairing::{Fairing, Info, Kind};
+use rocket::http::{Header, Status};
+use rocket::request::Request;
+use rocket::tokio::time::{interval_at, Instant};
+use rocket::Response;
+use rocket::{custom, tokio};
+use sqlx::MySqlPool;
 
 // // // // // // // // // // // // // // // // // // // // // // // //
 // // // // // // // // // // // // // // // // // // // // // // // //
 
 // curl -XGET --cookie "session_id=anythingrightnow" http://127.0.0.1:8000/
 #[get("/")]
-async fn index(
-    socket_addr: SocketAddr,
-    pool: &rocket::State<MySqlPool>
-) -> &'static str {
-    let is_pool_closed= pool.is_closed();
+async fn index(socket_addr: SocketAddr, pool: &rocket::State<MySqlPool>) -> &'static str {
+    let is_pool_closed = pool.is_closed();
     info!(target:"app::requests", "ROOT PATH - From: {}", socket_addr.ip().to_string());
     if is_pool_closed {
         "No Swimming"
@@ -87,11 +83,8 @@ async fn addaq(
     }
 }
 
-
-
 // // // // // // // // // // // // // // // // // // // // // // // //
 // // // // // // // // // // // // // // // // // // // // // // // //
-
 
 pub struct CORS;
 
@@ -141,14 +134,16 @@ pub async fn main() {
         .appender(Appender::builder().build("stdout", Box::new(stdout)))
         .appender(Appender::builder().build("requests", Box::new(requests)))
         // .logger(Logger::builder().build("app::backend::db", LevelFilter::Info))
-        .logger(Logger::builder().appender("requests").additive(true).build("app::requests", LevelFilter::Info))
+        .logger(
+            Logger::builder()
+                .appender("requests")
+                .additive(true)
+                .build("app::requests", LevelFilter::Info),
+        )
         .build(Root::builder().appender("stdout").build(LevelFilter::Warn))
         .unwrap();
 
-
-
     info!(target: "app::requests","Starting");
-
 
     // debug
     // println!("{:#?}", settings_map);
@@ -166,10 +161,8 @@ pub async fn main() {
     println!("{}", database_url.clone());
     let database_url = &settings_map.get("database_url").unwrap().as_str();
 
-
     println!("{}", database_url);
     // launch rocket
-
 
     let config = rocket::Config {
         port: settings_map.clone().get("port").unwrap().parse().unwrap(),
@@ -177,7 +170,9 @@ pub async fn main() {
         ..rocket::Config::debug_default()
     };
 
-    let pool = MySqlPool::connect(&database_url).await.expect("database connection");
+    let pool = MySqlPool::connect(&database_url)
+        .await
+        .expect("database connection");
 
     let moved_settings = settings_map.clone();
     tokio::spawn(async move {
@@ -185,7 +180,8 @@ pub async fn main() {
         let mut interval = interval_at(start, tokio::time::Duration::from_secs(3600));
 
         loop {
-            manage_airquality::airquality_funcs::fetch_data_fire_alerts(moved_settings.clone()).await;
+            manage_airquality::airquality_funcs::fetch_data_fire_alerts(moved_settings.clone())
+                .await;
             interval.tick().await;
         }
     });
@@ -198,19 +194,11 @@ pub async fn main() {
     custom(&config)
         .manage::<MySqlPool>(pool)
         .manage::<HashMap<String, String>>(settings_map.clone())
-        .mount(
-            "/",
-            routes![
-                index,
-                addaq,
-                addsub
-            ],
-        )
+        .mount("/", routes![index, addaq, addsub])
         .attach(CORS)
         .launch()
         .await
         .unwrap();
-
 }
 
 // The following impl's are for easy conversion of error types.
@@ -220,7 +208,6 @@ struct ErrorResponder {
     message: String,
 }
 
-
 impl From<anyhow::Error> for ErrorResponder {
     fn from(err: anyhow::Error) -> ErrorResponder {
         ErrorResponder {
@@ -228,7 +215,6 @@ impl From<anyhow::Error> for ErrorResponder {
         }
     }
 }
-
 
 impl From<String> for ErrorResponder {
     fn from(string: String) -> ErrorResponder {

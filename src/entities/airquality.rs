@@ -1,6 +1,5 @@
 use serde::*;
 
-
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct AirQuality {
