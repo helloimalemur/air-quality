@@ -1,6 +1,8 @@
 [Unit]
 Description=airquality
-After=network.target
+Wants=network-online.target
+After=network.target network-online.target
+
 
 [Service]
 Type=simple
@@ -15,5 +17,3 @@ StandardError=append:/usr/share/airquality/error.log
 
 [Install]
 WantedBy=multi-user.target
-After=network-online.target
-Wants=network-online.target
