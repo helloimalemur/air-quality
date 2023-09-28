@@ -45,7 +45,7 @@ jobs:
 #      with:
 #        hosts: 'root@root.koonts.net:423'
 #        privateKey: ${{ secrets.V1A_KEY }}
-#        command: rm -rf /usr/share/myq/target/debug/
+#        command: rm -rf /usr/share/myq/target/release/
 ##
     - name: Copy repo contents
       uses: nogsantos/scp-deploy@master
@@ -62,7 +62,7 @@ jobs:
       with:
         hosts: 'root@root.koonts.net:423'
         privateKey: ${{ secrets.V1A_KEY }}
-        command: cd /usr/share/airquality/ && /root/.cargo/bin/cargo build
+        command: cd /usr/share/airquality/ && /root/.cargo/bin/cargo build --release
 
     - name: stop or create service
       uses: JimCronqvist/action-ssh@master
@@ -92,7 +92,7 @@ jobs:
       with:
         hosts: 'root@root.koonts.net:423'
         privateKey: ${{ secrets.V1A_KEY }}
-        command: cp /usr/share/airquality/target/debug/air-quality /usr/share/airquality/air-quality
+        command: cp /usr/share/airquality/target/release/air-quality /usr/share/airquality/air-quality
 
 #    - name: copy assets
 #      uses: JimCronqvist/action-ssh@master
