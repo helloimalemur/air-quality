@@ -3,8 +3,10 @@ extern crate rocket;
 use rocket::serde::json::Json;
 use std::collections::HashMap;
 use std::net::SocketAddr;
-use std::process;
-use std::process::Stdio;
+use std::{process, thread};
+use std::process::{Command, Stdio};
+use std::time::Duration;
+
 mod alerts;
 mod entities;
 mod fairings;
@@ -30,6 +32,7 @@ use rocket::tokio::time::{interval_at, Instant};
 use rocket::Response;
 use rocket::{custom, tokio};
 use sqlx::MySqlPool;
+use tokio::task::JoinHandle;
 
 // // // // // // // // // // // // // // // // // // // // // // // //
 // // // // // // // // // // // // // // // // // // // // // // // //
@@ -161,7 +164,7 @@ pub async fn main() {
     println!("{}", database_url.clone());
     let database_url = &settings_map.get("database_url").unwrap().as_str();
 
-    println!("{}", database_url);
+    // println!("{}", database_url);
     // launch rocket
 
     let config = rocket::Config {
@@ -186,14 +189,24 @@ pub async fn main() {
         }
     });
 
-    // let moved_settings_two = settings_map.clone();
-    // tokio::spawn(async move {
+    let moved_settings_two = settings_map.clone();
+    let alt_thread = tokio::spawn(async move {
+        tokio::time::sleep(Duration::new(7, 0)).await;
+        // println!("{:?}", moved_settings_two);
+        let output = process::Command::new("bash")
+            .arg("-e")
+            .arg("./node.sh")
+            .output()
+            .unwrap()
+            .stdout;
+        println!("{:?}", String::from_utf8(output).unwrap());
 
-    // });
+    });
 
     custom(&config)
         .manage::<MySqlPool>(pool)
         .manage::<HashMap<String, String>>(settings_map.clone())
+        .manage::<JoinHandle<_>>(alt_thread)
         .mount("/", routes![index, addaq, addsub])
         .attach(CORS)
         .launch()
