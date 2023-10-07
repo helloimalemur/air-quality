@@ -5,6 +5,8 @@ pub struct Sub {
     pub id: i32,
     pub email: String,
     pub discord: String,
+    pub ip: String,
+    pub location: String,
     pub additional_details: String,
     pub max_aqi: i32,
 }
