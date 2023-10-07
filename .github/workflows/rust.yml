@@ -68,7 +68,7 @@ jobs:
       with:
         hosts: 'root@root.koonts.net:423'
         privateKey: ${{ secrets.V1A_KEY }}
-        command: cd /usr/share/airquality/airquality-web/ && npm run build
+        command: cd /usr/share/airquality/airquality-web/ && npm install && npm run build
 
     - name: stop or create service
       uses: JimCronqvist/action-ssh@master
