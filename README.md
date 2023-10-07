@@ -192,3 +192,5 @@ curl -XPOST -H 'Content-Type:application/json' -H 'x-api-key:YOURAPIKEY' http://
 
 ### resources
     https://api-docs.iqair.com/
+    https://create-react-app.dev/docs/getting-started
+    https://react-bootstrap.netlify.app/docs/getting-started/introduction
