@@ -1,29 +1,30 @@
 #!/bin/bash
 USER=$(whoami);
-SERVICE_USER="myq";
-sudo systemctl stop myq;
-if [ -f "/usr/share/myq/host.json" ]; then echo "copying /usr/share/myq/host.json to ~/host.json" && sudo cp /usr/share/myq/host.json /home/"$USER"/host.json; fi;
-if [ -f "/usr/share/myq/myq.yml" ]; then echo "copying /usr/share/myq/myq.yml to ~/myq.yml" && sudo cp /usr/share/myq/myq.yml /home/"$USER"/myq.yml; fi;
-sudo rm -rf /usr/share/myq/;
-sudo mkdir /usr/share/myq/;
-#sudo useradd myq;
-sudo passwd -l myq;
-sudo su -c 'pip install pymyq' $SERVICE_USER;
-sudo su -c 'pip install aiohttp' $SERVICE_USER;
-#cd /usr/share/myq/;
-sudo git clone https://github.com/helloimalemur/rust-myq-garage.git /usr/share/myq/rust-myq-garage/;
-sudo chown -R "$SERVICE_USER":"$SERVICE_USER" /usr/share/myq/;
-sudo chmod -R 0700 /usr/share/myq/;
-#cd rust-myq-garage/;
-sudo su -c 'cargo build --manifest-path=/usr/share/myq/rust-myq-garage/Cargo.toml.old' myq;
-sudo cp /usr/share/myq/rust-myq-garage/target/debug/rust-myq-garage /usr/share/myq/myq;
-sudo cp src/assets/myq.service /etc/systemd/system/myq.service;
+SERVICE_USER="airquality";
+sudo systemctl stop airquality;
+#if [ -f "/usr/share/airquality/host.json" ]; then echo "copying /usr/share/airquality/host.json to ~/host.json" && sudo cp /usr/share/airquality/host.json /home/"$USER"/host.json; fi;
+#if [ -f "/usr/share/airquality/airquality.yml" ]; then echo "copying /usr/share/airquality/airquality.yml to ~/airquality.yml" && sudo cp /usr/share/airquality/airquality.yml /home/"$USER"/airquality.yml; fi;
+sudo rm -rf /usr/share/airquality/;
+sudo mkdir /usr/share/airquality/;
+sudo useradd airquality;
+sudo passwd -l airquality;
+#sudo su -c 'pip install pyairquality' $SERVICE_USER;
+#sudo su -c 'pip install aiohttp' $SERVICE_USER;
+cd /usr/share/airquality/;
+
+sudo chown -R "$SERVICE_USER":"$SERVICE_USER" /usr/share/airquality/;
+sudo chmod -R 0700 /usr/share/airquality/;
+
+sudo su -c 'cargo build --release' airquality;
+sudo cp /usr/share/airquality/target/release/airquality /usr/share/airquality/airquality;
+sudo cp src/assets/airquality.service /etc/systemd/system/airquality.service;
 sudo systemctl daemon-reload;
-sudo cp src/assets/* /usr/share/myq/;
-if [ -f "/home/"$USER"/host.json" ]; then echo "copying ~/host.json to /usr/share/myq/host.json"; else sudo rm /usr/share/myq/host.json && sudo cp /home/"$USER"/host.json /usr/share/myq/host.json; fi;
-if [ -f "/home/"$USER"/myq.yml" ]; then echo "copying ~/myq.yml to /usr/share/myq/myq.yml"; else sudo rm /usr/share/myq/myq.yml && sudo cp /home/"$USER"/myq.yml /usr/share/myq/myq.yml; fi;
-sudo chown -R "$SERVICE_USER":"$SERVICE_USER" /usr/share/myq/;
-sudo chmod -R 0700 /usr/share/myq/;
-sudo systemctl start myq;
-sudo systemctl status myq;
-sudo tail -f /usr/share/myq/running.log
+sudo cp src/assets/* /usr/share/airquality/;
+if [ -f "/home/"$USER"/host.json" ]; then echo "copying ~/host.json to /usr/share/airquality/host.json"; else sudo rm /usr/share/airquality/host.json && sudo cp /home/"$USER"/host.json /usr/share/airquality/host.json; fi;
+if [ -f "/home/"$USER"/airquality.yml" ]; then echo "copying ~/airquality.yml to /usr/share/airquality/airquality.yml"; else sudo rm /usr/share/airquality/airquality.yml && sudo cp /home/"$USER"/airquality.yml /usr/share/airquality/airquality.yml; fi;
+sudo chown -R "$SERVICE_USER":"$SERVICE_USER" /usr/share/airquality/;
+sudo chmod -R 0700 /usr/share/airquality/;
+sudo systemctl start airquality;
+sudo systemctl status airquality;
+sudo tail -f /usr/share/airquality/running.log
+npm install react-bootstrap bootstrap
