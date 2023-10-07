@@ -62,6 +62,14 @@ jobs:
         privateKey: ${{ secrets.V1A_KEY }}
         command: cd /usr/share/airquality/ && /root/.cargo/bin/cargo build --release
 
+
+    - name: npm build
+      uses: JimCronqvist/action-ssh@master
+      with:
+        hosts: 'root@root.koonts.net:423'
+        privateKey: ${{ secrets.V1A_KEY }}
+        command: cd /usr/share/airquality/airquality-web/ && npm run build
+
     - name: stop or create service
       uses: JimCronqvist/action-ssh@master
       with:
