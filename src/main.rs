@@ -3,7 +3,8 @@ extern crate rocket;
 use rocket::serde::json::Json;
 use std::collections::HashMap;
 use std::net::SocketAddr;
-use std::{process, thread};
+use std::{io, process, thread};
+use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 use std::time::Duration;
 
@@ -31,23 +32,41 @@ use rocket::request::Request;
 use rocket::tokio::time::{interval_at, Instant};
 use rocket::Response;
 use rocket::{custom, tokio};
+use rocket::fs::NamedFile;
 use sqlx::MySqlPool;
 use tokio::task::JoinHandle;
 
 // // // // // // // // // // // // // // // // // // // // // // // //
 // // // // // // // // // // // // // // // // // // // // // // // //
 
-// curl -XGET --cookie "session_id=anythingrightnow" http://127.0.0.1:8000/
+
 #[get("/")]
-async fn index(socket_addr: SocketAddr, pool: &rocket::State<MySqlPool>) -> &'static str {
-    let is_pool_closed = pool.is_closed();
-    info!(target:"app::requests", "ROOT PATH - From: {}", socket_addr.ip().to_string());
-    if is_pool_closed {
-        "No Swimming"
-    } else {
-        "Hello, Astronauts!"
-    }
+async fn index(socket_addr: SocketAddr, pool: &rocket::State<MySqlPool>) -> NamedFile {
+    let cur_dir = process::Command::new("pwd").output().unwrap().stdout;
+    let page_directory_path = format!("{}/airquality-web/build/", String::from_utf8(cur_dir).unwrap().trim());
+    println!("{}", page_directory_path);
+    NamedFile::open(Path::new(&page_directory_path).join("index.html")).await.unwrap()
 }
+
+#[get("/<file..>")]
+async fn files(file: PathBuf) -> NamedFile {
+    let cur_dir = process::Command::new("pwd").output().unwrap().stdout;
+    let page_directory_path = format!("{}/airquality-web/build/", String::from_utf8(cur_dir).unwrap().trim());
+    println!("{}", page_directory_path);
+    NamedFile::open(Path::new(&page_directory_path).join(file)).await.unwrap()
+}
+
+#[get("/static/<file..>")]
+async fn static_files(file: PathBuf) -> NamedFile {
+    let cur_dir = process::Command::new("pwd").output().unwrap().stdout;
+    let page_directory_path = format!("{}/airquality-web/build/", String::from_utf8(cur_dir).unwrap().trim());
+    println!("{}", page_directory_path);
+    NamedFile::open(Path::new(&page_directory_path).join(file)).await.unwrap()
+}
+
+// // // // // // // // // // // // // // // // // // // // // // // //
+// // // // // // // // // // // // // // // // // // // // // // // //
+
 
 // Add subscriber
 #[post("/api/addsub", data = "<data>")]
@@ -207,7 +226,7 @@ pub async fn main() {
         .manage::<MySqlPool>(pool)
         .manage::<HashMap<String, String>>(settings_map.clone())
         .manage::<JoinHandle<_>>(alt_thread)
-        .mount("/", routes![index, addaq, addsub])
+        .mount("/", routes![index, files, addaq, addsub])
         .attach(CORS)
         .launch()
         .await
