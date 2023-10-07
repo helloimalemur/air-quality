@@ -51,6 +51,8 @@ CREATE TABLE `subs` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `email` varchar(255) NOT NULL,
     `discord` varchar(255) NOT NULL,
+    `ip` varchar(255) NOT NULL,
+    `location` varchar(255) NOT NULL,
     `additional_details` varchar(255) NOT NULL,
     PRIMARY KEY (`id`));
 ```
