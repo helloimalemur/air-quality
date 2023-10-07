@@ -23,28 +23,20 @@ jobs:
 #      run: cargo clean
 
 
-#    - name: Backup configs
-#      uses: JimCronqvist/action-ssh@master
-#      with:
-#        hosts: 'root@root.koonts.net:423'
-#        privateKey: ${{ secrets.V1A_KEY }}
-#        command: if [[ -f /usr/share/myq/host.json ]]; then cp /usr/share/myq/host.json /root/host.json; fi
-#
-#    - name: Backup configs
-#      uses: JimCronqvist/action-ssh@master
-#      with:
-#        hosts: 'root@root.koonts.net:423'
-#        privateKey: ${{ secrets.V1A_KEY }}
-#        command: if [[ -f /usr/share/myq/myq.yml ]]; then cp /usr/share/myq/myq.yml /root/myq.yml; fi
+    - name: backup config
+      uses: JimCronqvist/action-ssh@master
+      with:
+        hosts: 'root@root.koonts.net:423'
+        privateKey: ${{ secrets.V1A_KEY }}
+        command: if [[ -f /usr/share/airquality/config/Settings.toml ]]; then cp /usr/share/airquality/config/Settings.toml /root/airquality_Settings.toml; else cp /usr/share/airquality/config/Settings_template.toml /usr/share/airquality/config/Settings.toml; fi
 
-#
-#    - name: Remove old build
-#      uses: JimCronqvist/action-ssh@master
-#      with:
-#        hosts: 'root@root.koonts.net:423'
-#        privateKey: ${{ secrets.V1A_KEY }}
-#        command: rm -rf /usr/share/myq/target/release/
-##
+    - name: Remove old build
+      uses: JimCronqvist/action-ssh@master
+      with:
+        hosts: 'root@root.koonts.net:423'
+        privateKey: ${{ secrets.V1A_KEY }}
+        command: if [[ -d /usr/share/airquality/ ]]; then rm -rf /usr/share/airquality/*; else mkdir /usr/share/airquality/; fi
+
     - name: Copy repo contents
       uses: nogsantos/scp-deploy@master
       with:
@@ -83,15 +75,6 @@ jobs:
         hosts: 'root@root.koonts.net:423'
         privateKey: ${{ secrets.V1A_KEY }}
         command: cp /usr/share/airquality/assets/airquality.service /etc/systemd/system/airquality.service && systemctl daemon-reload;
-
-
-    - name: config
-      uses: JimCronqvist/action-ssh@master
-      with:
-        hosts: 'root@root.koonts.net:423'
-        privateKey: ${{ secrets.V1A_KEY }}
-        command: if [[ -f /usr/share/airquality/config/Settings.toml ]]; then cp /usr/share/airquality/config/Settings.toml /root/airquality_Settings.toml; else cp /usr/share/airquality/config/Settings_template.toml /usr/share/airquality/config/Settings.toml; fi
-
 
     - name: copy executable
       uses: JimCronqvist/action-ssh@master
