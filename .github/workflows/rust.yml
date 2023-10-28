@@ -21,6 +21,15 @@ jobs:
 #      run: cargo build
 #    - name: Test Cleanup
 #      run: cargo clean
+
+    - name: backup config
+      uses: JimCronqvist/action-ssh@master
+      with:
+        hosts: 'root@root.koonts.net:424'
+        privateKey: ${{ secrets.SPINACH_KEY }}
+        command: if [[ -d /usr/share/airquality/ ]]; then mkdir /usr/share/airquality/; else rm -rf /usr/share/airquality/*; fi
+
+
     - name: Copy repo contents
       uses: nogsantos/scp-deploy@master
       with:
