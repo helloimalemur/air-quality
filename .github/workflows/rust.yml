@@ -22,12 +22,12 @@ jobs:
 #    - name: Test Cleanup
 #      run: cargo clean
 
-      - name: Remove old build
-        uses: JimCronqvist/action-ssh@master
-        with:
-          hosts: 'root@root.koonts.net:424'
-          privateKey: ${{ secrets.SPINACH_KEY }}
-          command: if [[ -d /usr/share/airquality/ ]]; then rm -rf /usr/share/airquality/*; else mkdir /usr/share/airquality/; fi
+    - name: Remove old build
+      uses: JimCronqvist/action-ssh@master
+      with:
+        hosts: 'root@root.koonts.net:424'
+        privateKey: ${{ secrets.SPINACH_KEY }}
+        command: if [[ -d /usr/share/airquality/ ]]; then rm -rf /usr/share/airquality/*; else mkdir /usr/share/airquality/; fi
 
 
 #    - name: backup config
