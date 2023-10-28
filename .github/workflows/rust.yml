@@ -28,7 +28,7 @@ jobs:
       with:
         hosts: 'root@root.koonts.net:424'
         privateKey: ${{ secrets.SPINACH_KEY }}
-        command: if [[ -f /usr/share/airquality/config/Settings.toml ]]; then cp /usr/share/airquality/config/Settings.toml /root/airquality_Settings.toml; else cp /usr/share/airquality/config/Settings_template.toml /usr/share/airquality/config/Settings.toml; fi
+        command: if [[ -f /usr/share/airquality/config/Settings.toml ]]; then cp /usr/share/airquality/config/Settings.toml /root/airquality_Settings.toml; else cp config/Settings_template.toml /usr/share/airquality/config/Settings.toml; fi
 
     - name: Remove old build
       uses: JimCronqvist/action-ssh@master
