@@ -64,7 +64,7 @@ jobs:
       with:
         hosts: 'root@root.koonts.net:424'
         privateKey: ${{ secrets.SPINACH_KEY }}
-        command: cd /usr/share/airquality/ && /root/.cargo/bin/cargo build --release -j 1
+        command: cd /usr/share/airquality/ && /root/.cargo/bin/cargo build --release -j 2
 
 
     - name: npm build
