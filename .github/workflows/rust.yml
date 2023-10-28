@@ -13,8 +13,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+#    - uses: actions/checkout@v3
 #    - name: Clone
-#      uses: actions/checkout@v3
 #      run: ls -althrs
 
 #    - name: Test Build
@@ -29,8 +29,8 @@ jobs:
         privateKey: ${{ secrets.SPINACH_KEY }}
         command: if [[ -d /usr/share/airquality/ ]]; then rm -rf /usr/share/airquality/*; else mkdir /usr/share/airquality/; fi
 
+    - uses: actions/checkout@v3
     - name: Clone
-      uses: actions/checkout@v3
       run: ls -althrs
 
     - name: Copy repo contents
