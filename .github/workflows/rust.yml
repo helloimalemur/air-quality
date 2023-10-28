@@ -26,15 +26,15 @@ jobs:
     - name: backup config
       uses: JimCronqvist/action-ssh@master
       with:
-        hosts: 'root@root.koonts.net:423'
-        privateKey: ${{ secrets.V1A_KEY }}
+        hosts: 'root@root.koonts.net:424'
+        privateKey: ${{ secrets.SPINACH_KEY }}
         command: if [[ -f /usr/share/airquality/config/Settings.toml ]]; then cp /usr/share/airquality/config/Settings.toml /root/airquality_Settings.toml; else cp /usr/share/airquality/config/Settings_template.toml /usr/share/airquality/config/Settings.toml; fi
 
     - name: Remove old build
       uses: JimCronqvist/action-ssh@master
       with:
-        hosts: 'root@root.koonts.net:423'
-        privateKey: ${{ secrets.V1A_KEY }}
+        hosts: 'root@root.koonts.net:424'
+        privateKey: ${{ secrets.SPINACH_KEY }}
         command: if [[ -d /usr/share/airquality/ ]]; then rm -rf /usr/share/airquality/*; else mkdir /usr/share/airquality/; fi
 
     - name: Copy repo contents
@@ -43,86 +43,86 @@ jobs:
         src: ./*
         host: root.koonts.net
         remote: /usr/share/airquality/
-        port: 423
+        port: 424
         user: root
-        key: ${{ secrets.V1A_KEY }}
+        key: ${{ secrets.SPINACH_KEY }}
 #
     - name: cargo build
       uses: JimCronqvist/action-ssh@master
       with:
-        hosts: 'root@root.koonts.net:423'
-        privateKey: ${{ secrets.V1A_KEY }}
+        hosts: 'root@root.koonts.net:424'
+        privateKey: ${{ secrets.SPINACH_KEY }}
         command: cd /usr/share/airquality/ && /root/.cargo/bin/cargo build --release
 
 
     - name: npm build
       uses: JimCronqvist/action-ssh@master
       with:
-        hosts: 'root@root.koonts.net:423'
-        privateKey: ${{ secrets.V1A_KEY }}
+        hosts: 'root@root.koonts.net:424'
+        privateKey: ${{ secrets.SPINACH_KEY }}
         command: cd /usr/share/airquality/airquality-web/ && npm install && npm run build
 
     - name: stop or create service
       uses: JimCronqvist/action-ssh@master
       with:
-        hosts: 'root@root.koonts.net:423'
-        privateKey: ${{ secrets.V1A_KEY }}
+        hosts: 'root@root.koonts.net:424'
+        privateKey: ${{ secrets.SPINACH_KEY }}
         command: if [[ -f /etc/systemd/system/airquality.service ]]; then systemctl stop airquality; else echo "na"; fi
 
     - name: stop or create service
       uses: JimCronqvist/action-ssh@master
       with:
-        hosts: 'root@root.koonts.net:423'
-        privateKey: ${{ secrets.V1A_KEY }}
+        hosts: 'root@root.koonts.net:424'
+        privateKey: ${{ secrets.SPINACH_KEY }}
         command: cp /usr/share/airquality/assets/airquality.service /etc/systemd/system/airquality.service && systemctl daemon-reload;
 
     - name: copy executable
       uses: JimCronqvist/action-ssh@master
       with:
-        hosts: 'root@root.koonts.net:423'
-        privateKey: ${{ secrets.V1A_KEY }}
+        hosts: 'root@root.koonts.net:424'
+        privateKey: ${{ secrets.SPINACH_KEY }}
         command: cp /usr/share/airquality/target/release/air-quality /usr/share/airquality/air-quality
 
 #    - name: copy assets
 #      uses: JimCronqvist/action-ssh@master
 #      with:
-#        hosts: 'root@root.koonts.net:423'
-#        privateKey: ${{ secrets.V1A_KEY }}
+#        hosts: 'root@root.koonts.net:424'
+#        privateKey: ${{ secrets.SPINACH_KEY }}
 #        command: cp -r /usr/share/airquality/src/assets/* /usr/share/airquality/
 
 #    - name: copy assets
 #      uses: JimCronqvist/action-ssh@master
 #      with:
-#        hosts: 'root@root.koonts.net:423'
-#        privateKey: ${{ secrets.V1A_KEY }}
+#        hosts: 'root@root.koonts.net:424'
+#        privateKey: ${{ secrets.SPINACH_KEY }}
 #        command: cp /usr/share/airquality/airquality.service /usr/lib/systemd/system/airquality.service
 
     - name: copy assets
       uses: JimCronqvist/action-ssh@master
       with:
-        hosts: 'root@root.koonts.net:423'
-        privateKey: ${{ secrets.V1A_KEY }}
+        hosts: 'root@root.koonts.net:424'
+        privateKey: ${{ secrets.SPINACH_KEY }}
         command: systemctl daemon-reload
 
 
 #    - name: Restore configs
 #      uses: JimCronqvist/action-ssh@master
 #      with:
-#        hosts: 'root@root.koonts.net:423'
-#        privateKey: ${{ secrets.V1A_KEY }}
+#        hosts: 'root@root.koonts.net:424'
+#        privateKey: ${{ secrets.SPINACH_KEY }}
 #        command: if [[ -f /root/host.json ]]; then cp /root/host.json /usr/share/myq/host.json; fi
 #
     - name: config
       uses: JimCronqvist/action-ssh@master
       with:
-        hosts: 'root@root.koonts.net:423'
-        privateKey: ${{ secrets.V1A_KEY }}
+        hosts: 'root@root.koonts.net:424'
+        privateKey: ${{ secrets.SPINACH_KEY }}
         command: if [[ -f /root/airquality_Settings.toml ]]; then cp /root/airquality_Settings.toml /usr/share/airquality/config/Settings.toml; else echo "na"; fi
 
     - name: Execute SSH commmands on remote server
       uses: JimCronqvist/action-ssh@master
       with:
-        hosts: 'root@root.koonts.net:423'
-        privateKey: ${{ secrets.V1A_KEY }}
+        hosts: 'root@root.koonts.net:424'
+        privateKey: ${{ secrets.SPINACH_KEY }}
         command: systemctl restart airquality
 #        command: cd /usr/share/myq/ && /bin/bash -e start_docker.sh
