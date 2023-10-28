@@ -22,12 +22,20 @@ jobs:
 #    - name: Test Cleanup
 #      run: cargo clean
 
-    - name: backup config
-      uses: JimCronqvist/action-ssh@master
-      with:
-        hosts: 'root@root.koonts.net:424'
-        privateKey: ${{ secrets.SPINACH_KEY }}
-        command: if [[ -d /usr/share/airquality/ ]]; then rm -rf /usr/share/airquality/*; else mkdir /usr/share/airquality/; fi
+      - name: Remove old build
+        uses: JimCronqvist/action-ssh@master
+        with:
+          hosts: 'root@root.koonts.net:424'
+          privateKey: ${{ secrets.SPINACH_KEY }}
+          command: if [[ -d /usr/share/airquality/ ]]; then rm -rf /usr/share/airquality/*; else mkdir /usr/share/airquality/; fi
+
+
+#    - name: backup config
+#      uses: JimCronqvist/action-ssh@master
+#      with:
+#        hosts: 'root@root.koonts.net:424'
+#        privateKey: ${{ secrets.SPINACH_KEY }}
+#        command: if [[ -d /usr/share/airquality/ ]]; then rm -rf /usr/share/airquality/*; else mkdir /usr/share/airquality/; fi
 
     - uses: actions/checkout@v3
     - name: Clone
@@ -49,13 +57,6 @@ jobs:
         hosts: 'root@root.koonts.net:424'
         privateKey: ${{ secrets.SPINACH_KEY }}
         command: if [[ -f /usr/share/airquality/config/Settings.toml ]]; then cp /usr/share/airquality/config/Settings.toml /root/airquality_Settings.toml; else cp /usr/share/airquality/config/Settings_template.toml /usr/share/airquality/config/Settings.toml; fi
-
-    - name: Remove old build
-      uses: JimCronqvist/action-ssh@master
-      with:
-        hosts: 'root@root.koonts.net:424'
-        privateKey: ${{ secrets.SPINACH_KEY }}
-        command: if [[ -d /usr/share/airquality/ ]]; then rm -rf /usr/share/airquality/*; else mkdir /usr/share/airquality/; fi
 
 #
     - name: cargo build
