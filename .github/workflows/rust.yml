@@ -13,9 +13,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Clone
-      run: ls -althrs
+#    - name: Clone
+#      uses: actions/checkout@v3
+#      run: ls -althrs
 
 #    - name: Test Build
 #      run: cargo build
@@ -29,6 +29,9 @@ jobs:
         privateKey: ${{ secrets.SPINACH_KEY }}
         command: if [[ -d /usr/share/airquality/ ]]; then rm -rf /usr/share/airquality/*; else mkdir /usr/share/airquality/; fi
 
+    - name: Clone
+      uses: actions/checkout@v3
+      run: ls -althrs
 
     - name: Copy repo contents
       uses: nogsantos/scp-deploy@master
