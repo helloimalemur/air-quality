@@ -27,7 +27,7 @@ jobs:
       with:
         hosts: 'root@root.koonts.net:424'
         privateKey: ${{ secrets.SPINACH_KEY }}
-        command: if [[ -d /usr/share/airquality/ ]]; then mkdir /usr/share/airquality/; else rm -rf /usr/share/airquality/*; fi
+        command: if [[ -d /usr/share/airquality/ ]]; then rm -rf /usr/share/airquality/*; else mkdir /usr/share/airquality/; fi
 
 
     - name: Copy repo contents
