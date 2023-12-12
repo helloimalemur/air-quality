@@ -7,19 +7,18 @@ edition = "2021"
 
 [dependencies]
 futures = "0.3.27"
-sqlx = { version = "0.6.3", features = [ "runtime-tokio-rustls", "mysql", "chrono", "macros", "migrate", "uuid", "json" ] }
-rocket = { version = "^0.5.0-rc.2", features = ["json", "secrets"] }
+sqlx = { version = "0.7.3", features = [ "runtime-tokio-rustls", "mysql", "chrono", "macros", "migrate", "uuid", "json" ] }
+rocket = { version = "0.5.0", features = ["json", "secrets"] }
 config = {version = "0.13.1", features = ["json5"] }
 async-trait = "0.1.66"
 anyhow = "1.0.0"
 serde = { version = "1.0.152", features = ["derive"]}
 serde_json = "1.0.95"
-serde_with = "2.3.1"
+serde_with = "3.4.0"
 simple-log = "1.5.1"
 serde_derive = "1.0.159"
-toml = "0.7.3"
+toml = "0.8.8"
 chrono = "0.4.24"
-jwt-simple = "0.11.5"
 log = "0.4.19"
 log4rs = { version = "1.2.0", features = ["file_appender"] }
 time = "0.3.17"
