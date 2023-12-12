@@ -14,7 +14,7 @@ pub async fn send_discord(
         "AQI over threshold in {}.. {} > {}",
         current_city, current_aqi, max_aqi
     );
-    if discord.contains("https://discord.com/api/webhooks/") {
+    if discord.contains("https://discordapp.com/api/webhooks/") {
         println!("alert fired for {}", email);
         send(discord.as_str(), "AQ", message).await;
     } else {

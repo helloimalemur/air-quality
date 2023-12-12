@@ -54,6 +54,7 @@ CREATE TABLE `subs` (
     `ip` varchar(255) NOT NULL,
     `location` varchar(255) NOT NULL,
     `additional_details` varchar(255) NOT NULL,
+    `max_aqi` varchar(255) NOT NULL,
     PRIMARY KEY (`id`));
 ```
 
