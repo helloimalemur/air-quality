@@ -3,10 +3,10 @@ extern crate rocket;
 use rocket::serde::json::Json;
 use std::collections::HashMap;
 use std::net::SocketAddr;
-use std::{io, process, thread};
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 use std::time::Duration;
+use std::{io, process, thread};
 
 mod alerts;
 mod entities;
@@ -27,46 +27,59 @@ use log4rs::encode::pattern::PatternEncoder;
 use log4rs::Config as LogConfig;
 use manage_sub::sub_funcs::add_new_sub;
 use rocket::fairing::{Fairing, Info, Kind};
+use rocket::fs::NamedFile;
 use rocket::http::{Header, Status};
 use rocket::request::Request;
 use rocket::tokio::time::{interval_at, Instant};
 use rocket::Response;
 use rocket::{custom, tokio};
-use rocket::fs::NamedFile;
 use sqlx::MySqlPool;
 use tokio::task::JoinHandle;
 
 // // // // // // // // // // // // // // // // // // // // // // // //
 // // // // // // // // // // // // // // // // // // // // // // // //
 
-
 #[get("/")]
 async fn index(socket_addr: SocketAddr, pool: &rocket::State<MySqlPool>) -> NamedFile {
     let cur_dir = process::Command::new("pwd").output().unwrap().stdout;
-    let page_directory_path = format!("{}/airquality-web/build/", String::from_utf8(cur_dir).unwrap().trim());
+    let page_directory_path = format!(
+        "{}/airquality-web/build/",
+        String::from_utf8(cur_dir).unwrap().trim()
+    );
     println!("{}", page_directory_path);
-    NamedFile::open(Path::new(&page_directory_path).join("index.html")).await.unwrap()
+    NamedFile::open(Path::new(&page_directory_path).join("index.html"))
+        .await
+        .unwrap()
 }
 
 #[get("/<file..>")]
 async fn files(file: PathBuf) -> NamedFile {
     let cur_dir = process::Command::new("pwd").output().unwrap().stdout;
-    let page_directory_path = format!("{}/airquality-web/build/", String::from_utf8(cur_dir).unwrap().trim());
+    let page_directory_path = format!(
+        "{}/airquality-web/build/",
+        String::from_utf8(cur_dir).unwrap().trim()
+    );
     println!("{}", page_directory_path);
-    NamedFile::open(Path::new(&page_directory_path).join(file)).await.unwrap()
+    NamedFile::open(Path::new(&page_directory_path).join(file))
+        .await
+        .unwrap()
 }
 
 #[get("/static/<file..>")]
 async fn static_files(file: PathBuf) -> NamedFile {
     let cur_dir = process::Command::new("pwd").output().unwrap().stdout;
-    let page_directory_path = format!("{}/airquality-web/build/", String::from_utf8(cur_dir).unwrap().trim());
+    let page_directory_path = format!(
+        "{}/airquality-web/build/",
+        String::from_utf8(cur_dir).unwrap().trim()
+    );
     println!("{}", page_directory_path);
-    NamedFile::open(Path::new(&page_directory_path).join(file)).await.unwrap()
+    NamedFile::open(Path::new(&page_directory_path).join(file))
+        .await
+        .unwrap()
 }
 
 // // // // // // // // // // // // // // // // // // // // // // // //
 // // // // // // // // // // // // // // // // // // // // // // // //
-
 
 // Add subscriber
 #[post("/api/addsub", data = "<data>")]
@@ -219,7 +232,6 @@ pub async fn main() {
             .unwrap()
             .stdout;
         println!("{:?}", String::from_utf8(output).unwrap());
-
     });
 
     custom(&config)
